@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-sm-10 offset-sm-1 text-center">
+    <h1>{{'Domain check'|translate}}</h1>
+    <div class="info-form">
+      <form class="form-inline justify-content-center">
+        <input type="text"
+               class="form-control form-control-lg"
+               id="domain_check_name"
+               name="domain_check_name"
+               [(ngModel)]="form.domain"
+               (keypress)="($event.which === 13)? domainCheck() : 0"
+               placeholder="{{'Domain name'|translate}}"
+               required>
+        <a title="{{'Run test'|translate}}"
+                onClick="return false;"
+                (click)="domainCheck();"
+                style="cursor: pointer;"
+                class="ml-2">
+          <span class="fa fa-play-circle-o fa-5x"></span>
+        </a>
+      </form>
+      <p *ngIf="showProgressBar">
+        <ngb-progressbar
+          type="info"
+          [value]="domain_check_progression"
+          [striped]="true"
+          [animated]="true"
+        >
+          <span class="progress-value">{{domain_check_progression}}%</span>
+        </ngb-progressbar>
+      </p>
+      <div [class.invalid]="!checkboxForm.controls.selectedItems.valid" *ngIf="!checkboxForm.controls.selectedItems.valid">
+        At least one protocol is required in advanced options!
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="advanced">
+    <label>
+      <span class="switch">
+        <input type="checkbox" name="advanced_checkbox" [(ngModel)]="is_advanced_options_enabled">
+        <span class="slider round"></span>
+      </span>
+      {{'Advanced options'|translate}}
+    </label>
+
+    <div *ngIf="is_advanced_options_enabled">
+      <hr>
+      <form [formGroup]="checkboxForm">
+        <div [formArrayName]="'items'" [class.invalid]="!checkboxForm.controls.selectedItems.valid">
+          <div *ngFor="let protocol of checkboxForm.controls.items.controls; let i = index;" [formGroup]="protocol">
+            <input type="checkbox" formControlName="checked" id="protocol_{{ protocol.controls.key.value }}">
+            <label attr.for="protocol_{{ protocol.controls.key.value }}">{{ protocol.controls.value.value }}</label>
+          </div>
+        </div>
+        <hr>
+      </form>
+
+      <select [(ngModel)]="form.profile" class="form-control" name="form.profile">
+        <option value="default_profile">Default</option>
+        <option value="test_profile_1">IANA profile</option>
+        <option value="test_profile_2">Test profile 2</option>
+      </select>
+      <br>
+    </div>
+  </div>
+</div>
+<div class="row result d-block" *ngIf="showResult">
+  <div class="row d-block">
+    <h2> {{'Test #'|translate}} {{ test.id }}</h2>
+    <i>{{'Executed at'|translate}} {{ test.creation_time | date:"yyyy-MM-ddTHH:mmZ" }}</i>
+    <br>
+    <div class="form-group row">
+      <label for="link_location" class="col-sm-2 col-form-label"> {{'Link'|translate}} : </label>
+      <div class="col-sm-10">
+        <input type="text" id="link_location" name="link_location" class="form-inline" value="{{test.location}}">
+      </div>
+    </div>
+  </div>
+  <div class="row d-block">
+    <ngb-tabset justify="justified">
+      <ngb-tab>
+        <ng-template ngbTabTitle>{{'Basic'|translate}}</ng-template>
+        <ng-template ngbTabContent>
+          <div *ngFor="let module of getModules(result); let i = index" class="module">
+            <div class="text-{{modules[module]}}">
+              <a (click)="isCollapsed[i] = !isCollapsed[i]"
+                 [attr.aria-expanded]="!isCollapsed[i]" class="expand">
+                <span class="fa fa-plus-square-o"></span>
+              </a> &nbsp;
+              <span class="fa fa-{{modules[module]}}"></span>
+              {{module|translate}}
+            </div>
+            <div [ngbCollapse]="isCollapsed[i]" id="isCollapsed_{{a}}">
+              <div *ngFor="let item of getItems(result, module)" class="alert alert-{{item.level| lowercase}} more">
+                {{item.message|translate}}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab>
+        <ng-template ngbTabTitle>{{'Advanced'|translate}}</ng-template>
+        <ng-template ngbTabContent>
+          <div id="adv_result">
+            <div *ngFor="let module of getModules(result)">
+              <b>{{module|translate}}</b>
+              <div *ngFor="let item of getItems(result,module)" class="alert alert-{{item.level| lowercase}}">
+                {{item.message|translate}}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab>
+        <ng-template ngbTabTitle>{{'Export'|translate}}</ng-template>
+        <ng-template ngbTabContent>
+          <br>
+          <a download="report.txt" class="btn btn-primary" (click)="exportFile($event)">{{'Download'|translate}}</a>
+          <a target="_self" class="btn btn-primary" (click)="exportHTML($event)">{{'Download HTML'|translate}}</a>
+        </ng-template>
+      </ngb-tab>
+      <ngb-tab>
+        <ng-template ngbTabTitle>{{'History'|translate}}</ng-template>
+        <ng-template ngbTabContent>
+          <br>
+          <div class="" *ngFor="let item of history">
+            <span class="history-{{item.overall_result}}">&#x25C9;</span>&nbsp;
+            <a target="_self" href="/test/{{item.id}}"> lol</a>
+          </div>
+          <ngb-pagination [collectionSize]="history.lenght" [(page)]="page" [maxSize]="20" [boundaryLinks]="true" #pagination></ngb-pagination>
+          <pre>{{pagination.pageCount}}</pre>
+        </ng-template>
+      </ngb-tab>
+    </ngb-tabset>
+  </div>
+</div>
