@@ -65,11 +65,6 @@ export class FormComponent implements OnInit {
     });
 
     formControlArray.valueChanges.subscribe((v) => {
-      console.log('in value change')
-      console.log(v);
-      console.log(this.form);
-
-      this.form[v.key] = v.checked;
       this.checkboxForm.controls.selectedItems.setValue(this.mapItems(v));
     });
 
