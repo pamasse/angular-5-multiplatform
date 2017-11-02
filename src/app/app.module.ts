@@ -22,6 +22,8 @@ import { FormComponent } from './form/form.component';
 import { FilterPipe } from './filter.pipe';
 import { FilterByCategoriesPipe } from './filter-by-categories.pipe';
 import { RomanizePipe } from './romanize.pipe';
+import { ResultComponent } from './result/result.component';
+import { HistoryComponent } from './history/history.component';
 
 
 // AoT requires an exported function for factories
@@ -32,6 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 const appRoutes: Routes = [
   { path: 'domainCheck', component: DomainComponent, data: [{preDelegated: false}] },
   { path: 'preDelegatedDomainCheck', component: DomainComponent, data: [{preDelegated: true}] },
+  { path: 'result/:resultID', component: ResultComponent},
+  { path: 'history', component: HistoryComponent},
   { path: 'faq', component: FaqComponent },
   { path: '',
     redirectTo: 'domainCheck',
@@ -52,7 +56,9 @@ const appRoutes: Routes = [
     FormComponent,
     FilterPipe,
     FilterByCategoriesPipe,
-    RomanizePipe
+    RomanizePipe,
+    ResultComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
