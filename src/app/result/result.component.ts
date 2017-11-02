@@ -85,7 +85,6 @@ export class ResultComponent implements OnInit {
 
 
   private displayResult(domainCheckId: string, language: string) {
-    console.log(domainCheckId);
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
 
       // TODO clean
