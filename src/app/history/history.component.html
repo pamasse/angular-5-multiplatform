@@ -1,3 +1,5 @@
-<p>
-  history works!
-</p>
+<div class="" *ngFor="let item of historyItems">
+  <span class="history-{{item.overall_result}}">&#x25C9;</span>&nbsp;
+  <a target="_self" href="/test/{{item.id}}"> {{ item.creation_time | date:"yyyy-MM-ddTHH:mmZ" }} </a>
+</div>
+<ngb-pagination *ngIf="history.length > 1" [collectionSize]="history.length" [(page)]="page" [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>

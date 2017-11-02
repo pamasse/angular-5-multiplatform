@@ -1,0 +1,4 @@
+
+.history-error, .history-critical { color:red; }
+.history-warning { color:#F88017; }
+.history-ok { color:green; }

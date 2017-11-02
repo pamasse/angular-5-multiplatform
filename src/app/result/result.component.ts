@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import { saveAs } from 'file-saver';
+import {Router, ActivatedRoute, Params} from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 import {DnsCheckService} from '../dns-check.service';
 
 @Component({
@@ -15,20 +15,16 @@ export class ResultComponent implements OnInit {
   @Input() resultID: string;
 
   public result = [];
-  public pagesize = 10;
-  public pagedItems: any[];
   public modules: Object;
   public module_items: any = {};
   public modulesKeys;
   public searchQueryLength = 0;
   public resutlCollapsed = true;
   private closeResult: string;
-  private intervalTime = 5 * 1000;
   public test: any = {params: {ipv4: false, ipv6: false}};
   public isCollapsed = [];
   public ns_list;
   public ds_list;
-  private onInit = true;
   public level_items: Object = {
     info: [],
     notice: [],
@@ -46,6 +42,7 @@ export class ResultComponent implements OnInit {
     search: ''
   };
   private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
+  public historyQuery: object;
 
   constructor(private activatedRoute: ActivatedRoute,
               private modalService: NgbModal,
@@ -92,13 +89,14 @@ export class ResultComponent implements OnInit {
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
 
       // TODO clean
-
       this.test = {
         id: data['id'],
         creation_time: data['creation_time'],
-        location: `/result/${domainCheckId}`,
+        location: `${document.location.origin}/result/${domainCheckId}`,
         params: data['params']
       };
+
+      this.historyQuery = data['params'];
 
       this.result = data['results'];
 

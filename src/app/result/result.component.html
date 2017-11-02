@@ -6,7 +6,7 @@
     </div>
     <div class="col-md-6">
       <div class="pull-right actions_btn" >
-        <a class="btn btn-warning btn-collapsible" (click)="openModal(shareLinkModal)">
+        <a class="btn btn-warning btn-collapsible" (click)="openModal(historyModal)">
           <i class="fa fa-history text-white" aria-hidden="true"></i>
           <span class="text-white">{{'History'|translate}}</span>
         </a>
@@ -122,6 +122,19 @@
     <input type="text" id="link_location" name="link_location" class="form-inline" value="{{test.location}}">
   </div>
 </ng-template>
+
+<ng-template #historyModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+  <h4 class="modal-title">{{'History'|translate}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-history [query]="historyQuery"></app-history>
+  </div>
+</ng-template>
+
 
 <ng-template #resutlCollapsedTemplate>
   <tbody *ngFor="let moduleKey of modulesKeys | filter : result_filter.search:true:module_items | filterByCategories:result_filter:searchQueryLength:'level':true:module_items; let a = index" id="collapsed_module_{{a}}">
