@@ -122,8 +122,6 @@ export class FormComponent implements OnInit {
   }
 
   public runDomainCheck() {
-    console.log(this.form);
-
     if (this.preDelegated) {
       this.form['nameservers'] = this.NSForm.value.itemRows;
       this.form['ds_info'] = this.digestForm.value.itemRows;
@@ -142,7 +140,6 @@ export class FormComponent implements OnInit {
       console.log('Nope, at least one protocol');
     }
 
-
-    //this.onDomainCheck.emit(this.form);
+    this.onDomainCheck.emit(this.form);
   }
 }

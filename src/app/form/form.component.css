@@ -104,3 +104,7 @@ input:checked + .slider:before {
 .nsForm {
   margin-bottom: 5px;
 }
+
+.has-error {
+  color: red;
+}
