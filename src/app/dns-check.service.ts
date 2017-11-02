@@ -71,4 +71,9 @@ export class DnsCheckService {
   public validateSyntax(data) {
     return this.RPCRequest('validate_syntax', data);
   }
+
+  public fetchFromParent(domain) {
+    return this.RPCRequest('get_data_from_parent_zone', domain);
+  }
+
 }

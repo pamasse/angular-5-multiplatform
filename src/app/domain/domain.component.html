@@ -1,6 +1,15 @@
+<div class="row" *ngIf="preDelegated">
+  <div class="col-xs-10 col-sm-7 col-md-6 col-lg-4">
+    <div class="alert alert-info">
+      {{'Notice! This is an undelegated test'|translate}}
+      <br>
+      <a routerLink="/faq" fragment="undelegated">{{'What is an undelegated domain test?'|translate}}</a>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div class="col-sm-10 offset-sm-1 text-center">
-    <h1>{{'Domain check'|translate}}</h1>
+    <h1 *ngIf="!preDelegated;else other_content">{{'Domain check'|translate}}</h1>
     <div class="info-form">
       <form class="form-inline justify-content-center">
         <input type="text"
@@ -46,7 +55,72 @@
     </label>
 
     <div *ngIf="is_advanced_options_enabled">
-      <hr>
+      <div *ngIf="preDelegated">
+        <h4 class="d-inline">{{'Nameservers'|translate}}</h4>
+        <form [formGroup]="NSForm" class="form-inline">
+          <div formArrayName="itemRows">
+            <div class="nsForm" *ngFor="let itemrow of NSForm.controls.itemRows.controls; let i=index" [formGroupName]="i">
+                <input formControlName="ns" name='form.ns' class="form-control" placeholder="NS">
+                <input formControlName="ip" name='form.ip' class="form-control" placeholder="IP">
+                <button *ngIf="NSForm.controls.itemRows.controls.length > 1"
+                        (click)="deleteRow('NSForm', i)"
+                        class="btn btn-danger ">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+                <button *ngIf="NSForm.controls.itemRows.controls.length <= 1 || i == NSForm.controls.itemRows.controls.length - 1"
+                        type="button"
+                        (click)="addNewRow('NSForm')"
+                        class="btn btn-success">
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                </button>
+            </div>
+          </div>
+        </form>
+        <hr>
+
+        <h4 class="d-inline">{{'Digests'|translate}}</h4>
+        <form [formGroup]="digestForm" class="form-inline">
+          <div formArrayName="itemRows">
+            <div class="nsForm" *ngFor="let itemrow of digestForm.controls.itemRows.controls; let i=index" [formGroupName]="i">
+              <input formControlName="keytag" class="form-control" name="form.keytag" placeholder="Key tag">
+              <select formControlName="algorithm" class="form-control" name="form.algorithm">
+                <option value="3">DSA/SHA1</option>
+                <option value="5">RSA/SHA1</option>
+                <option value="6">DSA-NSEC3-SHA1</option>
+                <option value="7">RSASHA1-NSEC3-SHA1</option>
+                <option value="8">RSA/SHA-256</option>
+                <option value="10">RSA/SHA-512</option>
+                <option value="12">ECC-GOST</option>
+                <option value="13">ECDSAP256SHA256</option>
+                <option value="14">ECDSAP384SHA384</option>
+              </select>
+              <select formControlName="digtype" class="form-control" name="form.digtype">
+                <option value="1">SHA-1</option>
+                <option value="2">SHA-256</option>
+                <option value="3">GOST R 34.11-94</option>
+                <option value="4">SHA-384</option>
+              </select>
+              <input formControlName="digest" class="form-control" name="digest" placeholder="Digest">
+              <button *ngIf="digestForm.controls.itemRows.controls.length > 1"
+                      (click)="deleteRow('digestForm',i)"
+                      class="btn btn-danger ">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </button>
+              <button *ngIf="digestForm.controls.itemRows.controls.length <= 1 || i == digestForm.controls.itemRows.controls.length - 1"
+                      type="button"
+                      (click)="addNewRow('digestForm')"
+                      class="btn btn-success">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <br>
+        <button class="btn btn-default" (click)="fetchFromParent()">{{'Fetch data from parent zone'|translate}}</button>
+        <hr>
+      </div>
+
       <form [formGroup]="checkboxForm">
         <div [formArrayName]="'items'" [class.invalid]="!checkboxForm.controls.selectedItems.valid">
           <div *ngFor="let protocol of checkboxForm.controls.items.controls; let i = index;" [formGroup]="protocol">
@@ -66,73 +140,174 @@
     </div>
   </div>
 </div>
-<div class="row result d-block" *ngIf="showResult">
-  <div class="row d-block">
-    <h2> {{'Test #'|translate}} {{ test.id }}</h2>
-    <i>{{'Executed at'|translate}} {{ test.creation_time | date:"yyyy-MM-ddTHH:mmZ" }}</i>
-    <br>
-    <div class="form-group row">
-      <label for="link_location" class="col-sm-2 col-form-label"> {{'Link'|translate}} : </label>
-      <div class="col-sm-10">
-        <input type="text" id="link_location" name="link_location" class="form-inline" value="{{test.location}}">
+<div class="row result d-block" *ngIf="true"> <!--*ngIf="showResult">-->
+  <div class="row">
+    <div class="col-md-6">
+      <h2> {{'Test #'|translate}} {{ test.id }}</h2>
+      <i>{{'Executed at'|translate}} {{ test.creation_time | date:"yyyy-MM-ddTHH:mmZ" }}</i>
+    </div>
+    <div class="col-md-6">
+      <div class="pull-right actions_btn" >
+        <a class="btn btn-warning btn-collapsible" (click)="open(shareLinkModal)">
+          <i class="fa fa-history text-white" aria-hidden="true"></i>
+          <span class="text-white">{{'History'|translate}}</span>
+        </a>
+        <a class="btn btn-info btn-collapsible" (click)="exportFile()">
+          <i class="fa fa-cloud-download text-white"></i>
+          <span class="text-white">{{'Export'|translate}}</span>
+        </a>
+        <a class="btn btn-success btn-collapsible" (click)="open(shareLinkModal)">
+          <i class="fa fa-share text-white"></i>
+          <span class="text-white">Share</span>
+        </a>
+        <a class="btn btn-secondary btn-collapsible" (click)="open(shareLinkModal)">
+          <i class="fa fa-wrench text-white"></i>
+          <span class="text-white">Settings</span>
+        </a>
+      </div>
+      <div class="pull-right ipvX">
+        <span class="m-1">
+          <i [ngClass]="{'fa-check-circle text-success': test['params']['ipv4'], 'fa-times-circle text-danger': !test['params']['ipv4']}" class="fa" aria-hidden="true"></i>
+          ipv4
+        </span>
+            <span class="m-1 mr-3">
+          <i [ngClass]="{'fa-check-circle text-success': test['params']['ipv6'], 'fa-times-circle text-danger': !test['params']['ipv6']}" class="fa" aria-hidden="true"></i>
+          ipv6
+        </span>
       </div>
     </div>
   </div>
+
+  <br>
   <div class="row d-block">
-    <ngb-tabset justify="justified">
-      <ngb-tab>
-        <ng-template ngbTabTitle>{{'Basic'|translate}}</ng-template>
-        <ng-template ngbTabContent>
-          <div *ngFor="let module of getModules(result); let i = index" class="module">
-            <div class="text-{{modules[module]}}">
-              <a (click)="isCollapsed[i] = !isCollapsed[i]"
-                 [attr.aria-expanded]="!isCollapsed[i]" class="expand">
-                <span class="fa fa-plus-square-o"></span>
-              </a> &nbsp;
-              <span class="fa fa-{{modules[module]}}"></span>
-              {{module|translate}}
-            </div>
-            <div [ngbCollapse]="isCollapsed[i]" id="isCollapsed_{{a}}">
-              <div *ngFor="let item of getItems(result, module)" class="alert alert-{{item.level| lowercase}} more">
-                {{item.message|translate}}
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab>
-        <ng-template ngbTabTitle>{{'Advanced'|translate}}</ng-template>
-        <ng-template ngbTabContent>
-          <div id="adv_result">
-            <div *ngFor="let module of getModules(result)">
-              <b>{{module|translate}}</b>
-              <div *ngFor="let item of getItems(result,module)" class="alert alert-{{item.level| lowercase}}">
-                {{item.message|translate}}
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab>
-        <ng-template ngbTabTitle>{{'Export'|translate}}</ng-template>
-        <ng-template ngbTabContent>
-          <br>
-          <a download="report.txt" class="btn btn-primary" (click)="exportFile($event)">{{'Download'|translate}}</a>
-          <a target="_self" class="btn btn-primary" (click)="exportHTML($event)">{{'Download HTML'|translate}}</a>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab>
-        <ng-template ngbTabTitle>{{'History'|translate}}</ng-template>
-        <ng-template ngbTabContent>
-          <br>
-          <div class="" *ngFor="let item of history">
+
+    <ul class="nav nav-pills vertical-align filter">
+      <li class="nav-item">
+        <span class="ml-3 mr-2">Show:</span>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active text-white': result_filter.all}"
+           (click)="togglePillFilter('all')"
+           [(ngModel)]="result_filter.all" ngDefaultControl>
+          All <span class="badge badge-pill badge-secondary">{{result.length}}</span></a>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active bg-dark text-white': result_filter.info}"
+           (click)="togglePillFilter('info')"
+           [(ngModel)]="result_filter.info" ngDefaultControl>
+          Info
+          <span class="badge badge-pill badge-secondary">{{level_items['info'].length}}</span></a>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active bg-success text-white': result_filter.notice}"
+           (click)="togglePillFilter('notice')"
+           [(ngModel)]="result_filter.notice" ngDefaultControl>
+          Notice <span class="badge badge-pill badge-secondary">{{level_items['notice'].length}}</span></a>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active bg-warning text-white': result_filter.warning}"
+           (click)="togglePillFilter('warning')"
+           [(ngModel)]="result_filter.warning" ngDefaultControl>
+          Warning <span class="badge badge-pill badge-secondary">{{level_items['warning'].length}}</span></a>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active bg-danger text-white': result_filter.error}"
+           (click)="togglePillFilter('error')"
+           [(ngModel)]="result_filter.error" ngDefaultControl>
+          Error <span class="badge badge-pill badge-secondary">{{level_items['error'].length}}</span></a>
+      </li>
+      <li class="nav-item ml-1">
+        <a class="nav-link" [ngClass]="{'active bg-danger text-white': result_filter.critical}"
+           (click)="togglePillFilter('critical')"
+           [(ngModel)]="result_filter.critical" ngDefaultControl>Critical <span class="badge badge-pill badge-secondary">0</span></a>
+      </li>
+      <li class="search ml-1">
+        <div class="input-group">
+          <input type="text" [(ngModel)]="result_filter.search" class="form-control" placeholder="Filter text" aria-label="filter input" aria-describedby="basic-addon2">
+          <span class="input-group-addon" id="basic-addon2">
+              <i class="fa fa-filter" aria-hidden="true"></i>
+            </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="row mt-3">
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Module</th>
+          <th scope="col">Level</th>
+          <th scope="col">Message</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!resutlCollapsed;else resutlCollapsedTemplate">
+        <tr *ngFor="let item of result | filter : result_filter.search | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
+          <th scope="row">{{i}}</th>
+          <td>{{item.module|translate}}</td>
+          <td>{{item.level}}</td>
+          <td>{{item.message|translate}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--
+
+          <div class="" *ngFor="let item of historyItems">
             <span class="history-{{item.overall_result}}">&#x25C9;</span>&nbsp;
-            <a target="_self" href="/test/{{item.id}}"> lol</a>
+            <a target="_self" href="/test/{{item.id}}"> {{ item.creation_time | date:"yyyy-MM-ddTHH:mmZ" }} </a>
           </div>
-          <ngb-pagination [collectionSize]="history.lenght" [(page)]="page" [maxSize]="20" [boundaryLinks]="true" #pagination></ngb-pagination>
-          <pre>{{pagination.pageCount}}</pre>
-        </ng-template>
-      </ngb-tab>
-    </ngb-tabset>
+          <ngb-pagination *ngIf="history.length > 1" [collectionSize]="history.length" [(page)]="page" [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        -->
   </div>
 </div>
+
+<div class="row about" *ngIf="!showResult">
+  <h4>About Zonemaster</h4>
+  <p>
+    Give your domain a complete physical! Zonemaster helps you to control how your website is doing. As a bonus, you also get a better understanding of how the domain name system, DNS, works.
+    When a domain (also called zone) is sent to Zonemaster, the program investigates the state of the domain from beginning to end. This is done through Zonemaster examining DNS from the root (.) to the TLD (top-level domain, for example, .se), and then finally through the DNS servers that contain information about the specified domain (for example, zonemaster.se).
+    Zonemaster is also able to perform many other tests, for example, checking the DNSSEC signatures, that different hosts can be accessed and that the IP addresses are valid. This is all to make sure that your domain runs as good as possible.
+  </p>
+
+  <h4>About the domain name system, DNS</h4>
+  <p>Most people who use the internet have never reflected over what actually happens when one types an address in their web browser and then clicks the enter button.
+    To simplify, the domain name system, (DNS) is a database that associates domain names to IP addresses, the same way a phone book associates names to phone numbers.
+    An IP address is a unique series of numbers that identifies every computer that is connected to the internet. It’s similar to the way every telephone has its own number in the telephone network.
+    A long series of numbers works fine for computers, but it’s difficult for people to memorize. Therefore, DNS has been developed – an extra system for us when we want to reach a web server on a specific site or an email server we want to send an email to.
+  </p>
+</div>
+
+<ng-template #other_content><h1>{{'Pre-delegated domain'|translate}}</h1></ng-template>
+
+<ng-template #shareLinkModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{'Link'|translate}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <input type="text" id="link_location" name="link_location" class="form-inline" value="{{test.location}}">
+  </div>
+</ng-template>
+
+<ng-template #resutlCollapsedTemplate>
+  <tbody *ngFor="let moduleKey of modulesKeys | filter : result_filter.search:true:module_items | filterByCategories:result_filter:searchQueryLength:'level':true:module_items; let a = index" id="collapsed_module_{{a}}">
+      <tr (click)="isCollapsed[a] = !isCollapsed[a]"
+          [attr.aria-expanded]="!isCollapsed[a]" aria-controls="collapseExample" class="expand bg-{{modules[moduleKey]}}" >
+        <th scope="row" >
+          <a >
+          {{a | romanize}}
+          </a>
+        </th>
+        <td colspan="3">{{moduleKey|translate}}</td>
+      </tr>
+      <tr [ngbCollapse]="isCollapsed[a]" *ngFor="let item of module_items[moduleKey] | filter : result_filter.search | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
+        <th scope="row">{{i}}</th>
+        <td>{{item.module|translate}}</td>
+        <td>{{item.level}}</td>
+        <td>{{item.message|translate}}</td>
+      </tr>
+  </tbody>
+</ng-template>

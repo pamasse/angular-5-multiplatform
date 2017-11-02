@@ -6,6 +6,7 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MarkdownModule } from 'angular2-markdown';
 
 import { AppComponent } from './app.component';
 import { DomainComponent } from './domain/domain.component';
@@ -17,6 +18,10 @@ import { FooterComponent } from './footer/footer.component';
 
 import { AppService } from './app.service';
 import {DnsCheckService} from './dns-check.service';
+import { FormComponent } from './form/form.component';
+import { FilterPipe } from './filter.pipe';
+import { FilterByCategoriesPipe } from './filter-by-categories.pipe';
+import { RomanizePipe } from './romanize.pipe';
 
 
 // AoT requires an exported function for factories
@@ -25,8 +30,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 const appRoutes: Routes = [
-  { path: 'domainCheck', component: DomainComponent },
-  { path: 'preDelegatedDomainCheck', component: PreDelegatedDomainComponent },
+  { path: 'domainCheck', component: DomainComponent, data: [{preDelegated: false}] },
+  { path: 'preDelegatedDomainCheck', component: DomainComponent, data: [{preDelegated: true}] },
   { path: 'faq', component: FaqComponent },
   { path: '',
     redirectTo: 'domainCheck',
@@ -43,7 +48,11 @@ const appRoutes: Routes = [
     FaqComponent,
     PageNotFoundComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    FormComponent,
+    FilterPipe,
+    FilterByCategoriesPipe,
+    RomanizePipe
   ],
   imports: [
     BrowserModule,
@@ -51,6 +60,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    MarkdownModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
