@@ -28,6 +28,7 @@ export class ResultComponent implements OnInit {
   public isCollapsed = [];
   public ns_list;
   public ds_list;
+  private onInit = true;
   public level_items: Object = {
     info: [],
     notice: [],
@@ -49,21 +50,19 @@ export class ResultComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private modalService: NgbModal,
               private translateService: TranslateService,
-              private dnsCheckService: DnsCheckService) {
-    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.displayResult(this.resultID, event.lang);
-    });
-  }
+              private dnsCheckService: DnsCheckService) {}
 
   ngOnInit() {
     const language = this.translateService.currentLang;
 
-    if (!this.resultID) {
+    if (this.resultID) {
       this.displayResult(this.resultID, language);
     } else {
       this.activatedRoute.params.subscribe((params: Params) => {
         this.resultID = params['resultID'];
-        this.displayResult(this.resultID, language);
+        this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+          this.displayResult(this.resultID, event.lang);
+        });
       });
     }
   }
@@ -89,7 +88,7 @@ export class ResultComponent implements OnInit {
 
 
   private displayResult(domainCheckId: string, language: string) {
-
+    console.log(domainCheckId);
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
 
       // TODO clean
