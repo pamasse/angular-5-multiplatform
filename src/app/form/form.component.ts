@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import { FormGroup,
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import {
+  FormGroup,
   FormControl,
   FormArray,
+  FormBuilder,
   Validators } from '@angular/forms';
-import {DnsCheckService} from '../dns-check.service';
 
 @Component({
   selector: 'app-form',
@@ -12,30 +12,36 @@ import {DnsCheckService} from '../dns-check.service';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
-
-  @Input() domainCheck;
+  @Input() is_advanced_options_enabled;
+  @Input() preDelegated;
   @Input() domain_check_progression;
+  @Input() showProgressBar;
 
-  private intervalTime = 5 * 1000;
+  @Output() onDomainCheck = new EventEmitter<object>();
+  @Output() onfetchFromParent = new EventEmitter<string>();
+
   private checkboxForm: FormGroup;
-  private is_advanced_options_enabled = false;
-  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
-  private items = [
-    {key: 'ipv4', value: 'IPv4', checked: 'true'},
-    {key: 'ipv6', value: 'IPv6', checked: 'true'},
-  ];
 
-  public result = {};
-  public isCollapsed = [];
+  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
+
+  private NSFormConfig = {
+    ns: [''],
+    ip: ['']
+  };
+  private digestFormConfig = {
+    keytag: [''],
+    algorithm: [''],
+    digtype: [''],
+    digest: ['']
+  };
+  public NSForm: FormGroup;
+  public digestForm: FormGroup;
   public ns_list;
   public ds_list;
   public history = {};
   public test = {};
-  public modules;
-  public showResult = false;
-  public showProgressBar = false;
-  public pagedItems: any[];
-  constructor(private dnsCheckService: DnsCheckService, private translateService: TranslateService) {}
+
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
     const group = [];
@@ -59,9 +65,60 @@ export class FormComponent implements OnInit {
     });
 
     formControlArray.valueChanges.subscribe((v) => {
-      this.form[v.key] = v.checked
+      console.log('in value change')
+      console.log(v);
+      console.log(this.form);
+
+      this.form[v.key] = v.checked;
       this.checkboxForm.controls.selectedItems.setValue(this.mapItems(v));
     });
+
+    this.NSForm = this.formBuilder.group({
+      itemRows: this.formBuilder.array([this.initItemRows(this.NSFormConfig)]) // here
+    });
+
+    this.digestForm = this.formBuilder.group({
+      itemRows: this.formBuilder.array([this.initItemRows(this.digestFormConfig)]) // here
+    });
+  }
+
+  @Input()
+  set parentData(data: object) {
+    if (this.NSForm) {
+      this.deleteRow('NSForm', 0);
+      data['ns_list'].map(ns => {
+        this.addNewRow('NSForm', ns);
+      });
+
+      this.deleteRow('digestForm', 0);
+      data['ds_list'].map(digest => {
+        this.addNewRow('digestForm', digest);
+      });
+    }
+  }
+
+  public addNewRow(form, value= null) {
+    const control = <FormArray>this[form].controls['itemRows'];
+    if (value !== null) {
+      control.push(this.initItemRows(value));
+    } else if (form === 'NSForm') {
+      control.push(this.initItemRows(this.NSFormConfig));
+    } else if (form === 'digestForm') {
+      control.push(this.initItemRows(this.digestFormConfig));
+    }
+  }
+
+  private displayDataFromParent() {
+    this.onfetchFromParent.emit(this.form['domain']);
+  }
+
+  public deleteRow(form, index: number) {
+    const control = <FormArray>this[form].controls['itemRows'];
+    control.removeAt(index);
+  }
+
+  public initItemRows(value) {
+    return this.formBuilder.group(value);
   }
 
   private mapItems(items) {
@@ -69,4 +126,28 @@ export class FormComponent implements OnInit {
     return selectedItems.length ? selectedItems : null;
   }
 
+  public runDomainCheck() {
+    console.log(this.form);
+
+    if (this.preDelegated) {
+      this.form['nameservers'] = this.NSForm.value.itemRows;
+      this.form['ds_info'] = this.digestForm.value.itemRows;
+    }
+    let atLeastOneChecked = false;
+    const protocols = this.checkboxForm.value.items;
+    for (const el of protocols) {
+      this.form[el.key] = el.checked;
+      atLeastOneChecked += el.checked;
+    }
+
+    if (this.form['domain'] === '') {
+      console.log('nope, need domain');
+      return false;
+    } else if (!atLeastOneChecked) {
+      console.log('Nope, at least one protocol');
+    }
+
+
+    //this.onDomainCheck.emit(this.form);
+  }
 }

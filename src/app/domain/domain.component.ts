@@ -1,9 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import { FormGroup,
-  FormControl,
-  FormArray,
-  FormBuilder,
-  Validators } from '@angular/forms';
 import {DnsCheckService} from '../dns-check.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -15,137 +10,40 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class DomainComponent implements OnInit {
   private intervalTime = 5 * 1000;
-  private checkboxForm: FormGroup;
   private is_advanced_options_enabled = false;
-  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
-  private items = [
-    {key: 'ipv4', value: 'IPv4', checked: 'true'},
-    {key: 'ipv6', value: 'IPv6', checked: 'true'},
-  ];
-  private NSFormConfig = {
-    ns: [''],
-    ip: ['']
-  };
-  private digestFormConfig = {
-    keytag: [''],
-    algorithm: [''],
-    digtype: [''],
-    digest: ['']
-  };
-  public NSForm: FormGroup;
-  public digestForm: FormGroup;
   public domain_check_progression = 0;
-  public ns_list;
-  public ds_list;
-  public test: any = {params: {ipv4: false, ipv6: false}};
   public showResult = false;
   public showProgressBar = false;
   public preDelegated;
-  public page = 1;
-  public pagesize = 10;
-
+  public parentData: object;
   public resultID = '';
 
-  constructor(private dnsCheckService: DnsCheckService, private formBuilder: FormBuilder, route: ActivatedRoute) {
+  constructor(private dnsCheckService: DnsCheckService, route: ActivatedRoute) {
     this.preDelegated = route.snapshot.data[0]['preDelegated'];
     this.is_advanced_options_enabled = this.preDelegated;
   }
 
-  ngOnInit() {
-    const group = [];
+  ngOnInit() {}
 
-    group.push(new FormGroup({
-      key: new FormControl('ipv4'),
-      value: new FormControl('IPv4'),
-      checked: new FormControl(true)
-    }));
-    group.push(new FormGroup({
-      key: new FormControl('ipv6'),
-      value: new FormControl('IPv6'),
-      checked: new FormControl(true)
-    }));
-
-    const formControlArray = new FormArray(group);
-
-    this.checkboxForm = new FormGroup({
-      items: formControlArray,
-      selectedItems: new FormControl(this.mapItems(formControlArray.value), Validators.required)
-    });
-
-    formControlArray.valueChanges.subscribe((v) => {
-      this.form[v.key] = v.checked;
-      this.checkboxForm.controls.selectedItems.setValue(this.mapItems(v));
-    });
-
-    this.NSForm = this.formBuilder.group({
-      itemRows: this.formBuilder.array([this.initItemRows(this.NSFormConfig)]) // here
-    });
-
-    this.digestForm = this.formBuilder.group({
-      itemRows: this.formBuilder.array([this.initItemRows(this.digestFormConfig)]) // here
-    });
-
+  public fetchFromParent(domain) {
+    console.log(domain);
+    this.dnsCheckService.fetchFromParent(domain).then(result => {
+      console.log(result);
+      this.parentData = result;
+  }, error => {
+    console.error('Error');
+  });
   }
 
-  addNewRow(form, value= null) {
-    const control = <FormArray>this[form].controls['itemRows'];
-    if (value !== null) {
-      control.push(this.initItemRows(value));
-    } else if (form === 'NSForm') {
-      control.push(this.initItemRows(this.NSFormConfig));
-    } else if (form === 'digestForm') {
-      control.push(this.initItemRows(this.digestFormConfig));
-    }
-  }
-
-  deleteRow(form, index: number) {
-    const control = <FormArray>this[form].controls['itemRows'];
-    control.removeAt(index);
-  }
-
-  initItemRows(value) {
-    return this.formBuilder.group(value);
-  }
-
-  private mapItems(items) {
-    const selectedItems = items.filter((l) => l.checked).map((l) => l.key);
-    return selectedItems.length ? selectedItems : null;
-  }
-
-  public fetchFromParent() {
-    this.dnsCheckService.fetchFromParent(this.form['domain']).then(result => {
-      this.deleteRow('NSForm', 0);
-      result['ns_list'].map(ns => {
-        this.addNewRow('NSForm', ns);
-      });
-
-      this.deleteRow('digestForm', 0);
-      result['ds_list'].map(digest => {
-        this.addNewRow('digestForm', digest);
-      });
-    }, error => {
-        console.error('Error');
-    });
-  }
-
-  public domainCheck() {
+  public domainCheck(data: object) {
     let domainCheckId: string;
 
     const self = this;
-    if (this.form['domain'] === '') {
-      console.log('nope, need domain');
-      return false;
-    }
 
-    if (this.preDelegated) {
-      this.form['nameservers'] = this.NSForm.value.itemRows;
-      this.form['ds_info'] = this.digestForm.value.itemRows;
-    }
-
-    this.dnsCheckService.validateSyntax(this.form).then(
+    this.dnsCheckService.validateSyntax(data).then(
       result => {
         if (result['status'] === 'ok') {
-          this.dnsCheckService.startDomainTest(this.form).then(id => {
+          this.dnsCheckService.startDomainTest(data).then(id => {
             domainCheckId = id as string;
             this.showProgressBar = true;
             const handle = setInterval(() => {
@@ -159,6 +57,7 @@ export class DomainComponent implements OnInit {
                     self.resultID = domainCheckId;
                     self.showResult = true;
                     self.showProgressBar = false;
+                    self.domain_check_progression = 0;
                   }
                 }
               });
@@ -168,6 +67,4 @@ export class DomainComponent implements OnInit {
       }
     );
   }
-
-
 }
