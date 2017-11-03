@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {DnsCheckService} from '../dns-check.service';
+import {DnsCheckService} from '../../services/dns-check.service';
 
 @Component({
   selector: 'app-footer',

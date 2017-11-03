@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DnsCheckService} from '../dns-check.service';
+import {DnsCheckService} from '../../services/dns-check.service';
 import {ActivatedRoute} from '@angular/router';
-
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-domain',
@@ -18,7 +18,7 @@ export class DomainComponent implements OnInit {
   public parentData: object;
   public resultID = '';
 
-  constructor(private dnsCheckService: DnsCheckService, route: ActivatedRoute) {
+  constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService, route: ActivatedRoute) {
     this.preDelegated = route.snapshot.data[0]['preDelegated'];
     this.is_advanced_options_enabled = this.preDelegated;
   }
@@ -26,12 +26,12 @@ export class DomainComponent implements OnInit {
   ngOnInit() {}
 
   public fetchFromParent(domain) {
-    console.log(domain);
     this.dnsCheckService.fetchFromParent(domain).then(result => {
-      console.log(result);
       this.parentData = result;
-  }, error => {
-    console.error('Error');
+      this.alertService.success('Parent data fetched with success');
+    }, error => {
+      console.log(error);
+      this.alertService.error('Error during fetchFromParent');
   });
   }
 
@@ -54,7 +54,9 @@ export class DomainComponent implements OnInit {
                 if (res === 100) {
                   clearInterval(handle);
                   if (!this.showResult) {
+                    this.alertService.success(`Domain ${data['domain']} checked with success`);
                     self.resultID = domainCheckId;
+                    self.is_advanced_options_enabled = false;
                     self.showResult = true;
                     self.showProgressBar = false;
                     self.domain_check_progression = 0;

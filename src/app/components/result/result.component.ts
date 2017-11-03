@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {Router, ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
-import {DnsCheckService} from '../dns-check.service';
+import {DnsCheckService} from '../../services/dns-check.service';
 
 @Component({
   selector: 'app-result',
@@ -86,13 +86,12 @@ export class ResultComponent implements OnInit {
 
   private displayResult(domainCheckId: string, language: string) {
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
-
       // TODO clean
+
       this.test = {
         id: data['id'],
         creation_time: data['creation_time'],
-        location: `${document.location.origin}/result/${domainCheckId}`,
-        params: data['params']
+        location: `${document.location.origin}/result/${domainCheckId}`
       };
 
       this.historyQuery = data['params'];

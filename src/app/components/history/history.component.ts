@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {DnsCheckService} from '../dns-check.service';
+import {DnsCheckService} from '../../services/dns-check.service';
+import {AlertService} from '../../services/alert.service';
+
 
 @Component({
   selector: 'app-history',
@@ -11,13 +13,12 @@ export class HistoryComponent implements OnInit {
   @Input() query: object;
 
   public page = 1;
-  public pagesize = 10;
-  public pagedItems: any[];
+  public pageSize = 10;
 
   public history: any[] = [];
   public historyItems: any[] = [];
 
-  constructor(private dnsCheckService: DnsCheckService) { }
+  constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService) { }
 
   ngOnInit() {
     // TODO Cache le resultat de la query si elle a deja été faite
@@ -25,8 +26,7 @@ export class HistoryComponent implements OnInit {
       this.history = data as any[];
 
       if (this.history.length === 0) {
-        console.log('No result for this query');
-        // Message error;
+        this.alertService.info('No result for this query');
       }
 
       this.setItemsByPage(1);
@@ -35,7 +35,7 @@ export class HistoryComponent implements OnInit {
 
   public setItemsByPage(page: number) {
     // TODO rename function
-    this.historyItems = this.history.slice( (page - 1) * this.pagesize, page * this.pagesize );
+    this.historyItems = this.history.slice( (page - 1) * this.pageSize, page * this.pageSize );
   }
 
 }

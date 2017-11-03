@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {AlertService} from './alert.service';
 
 @Injectable()
 export class DnsCheckService {
   private backendUrl = 'http://localhost:5000';
-  private activeUrl = 'http://localhost/ang/domain_check';
-  private inactiveUrl = 'http://localhost/ang/domain_check';
 
-  constructor( private http: HttpClient) {}
+  constructor(private alertService: AlertService, private http: HttpClient) {}
 
   private RPCRequest(method, params = []) {
     const id = Date.now();
@@ -22,11 +21,14 @@ export class DnsCheckService {
       this.http.post(this.backendUrl, data)
         .subscribe(res => {
           if ('error' in res) {
+            console.log(res['error']);
+            this.alertService.error('Error');
             reject(res['error']);
           } else {
             resolve(res['result']);
           }
         }, (err) => {
+          this.alertService.error('Error');
           console.error(err);
           reject(err);
         });
