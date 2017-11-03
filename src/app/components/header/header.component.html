@@ -5,12 +5,12 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <a class="navbar-brand" href="#" *ngIf="!isNavbarCollapsed">
+    <a class="navbar-brand" routerLink="/" *ngIf="!isNavbarCollapsed">
       <img src="{{logoUrl}}" alt="DNS check" width="300">
     </a>
 
     <div [ngbCollapse]="isNavbarCollapsed" class="collapse navbar-collapse" id="navBar">
-      <a class="navbar-brand" href="#" *ngIf="isNavbarCollapsed">
+      <a class="navbar-brand" routerLink="/" *ngIf="isNavbarCollapsed">
         <img src="{{logoUrl}}" alt="DNS check" width="300">
       </a>
 
