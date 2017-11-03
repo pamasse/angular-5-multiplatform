@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DnsCheckService} from '../../services/dns-check.service';
+import {AppService} from '../../services/app.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,8 +9,11 @@ import {DnsCheckService} from '../../services/dns-check.service';
 })
 export class FooterComponent implements OnInit {
   private version;
+  public contactAddress: string;
 
-  constructor(private dnsCheckService: DnsCheckService) {}
+  constructor(private dnsCheckService: DnsCheckService) {
+    this.contactAddress = AppService.getContactAddress();
+  }
 
   ngOnInit() {
     this.getAppVersion();

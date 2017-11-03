@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {AlertService} from './alert.service';
+import {AppService} from './app.service';
 
 @Injectable()
 export class DnsCheckService {
-  private backendUrl = 'http://localhost:5000';
+  private backendUrl: string;
 
-  constructor(private alertService: AlertService, private http: HttpClient) {}
+  constructor(private alertService: AlertService, private http: HttpClient) {
+    this.backendUrl = AppService.apiEndpoint();
+    if (this.backendUrl) {
+      console.error('Please set the api endpoint');
+    }
+  }
 
   private RPCRequest(method, params = []) {
     const id = Date.now();

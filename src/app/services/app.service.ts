@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AppService {
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
-  public setBackend(ip: string, host: number) {
-    return true;
+  public static apiEndpoint(): string {
+    return environment.apiEndpoint;
   }
+
+  public static getContactAddress(): string {
+    return environment.contactAddress;
+  }
+
+  public static getLogoUrl(): string {
+    return environment.logoUrl;
+  }
+
 }
