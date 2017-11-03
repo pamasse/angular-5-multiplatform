@@ -5,6 +5,7 @@ import {
   FormArray,
   FormBuilder,
   Validators } from '@angular/forms';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-form',
@@ -39,7 +40,7 @@ export class FormComponent implements OnInit {
   public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public checkboxForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private alertService: AlertService) {}
 
   ngOnInit() {
     const group = [];
@@ -132,10 +133,10 @@ export class FormComponent implements OnInit {
     }
 
     if (this.form['domain'] === '') {
-      console.log('nope, need domain');
+      this.alertService.error('Domain name needed');
       return false;
     } else if (!atLeastOneChecked) {
-      console.log('Nope, at least one protocol');
+      this.alertService.error('Choose at least one protocol');
     }
 
     this.onDomainCheck.emit(this.form);
