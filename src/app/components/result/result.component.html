@@ -18,10 +18,18 @@
           <i class="fa fa-share text-white"></i>
           <span class="text-white">Share</span>
         </a>
-        <a class="btn btn-secondary btn-collapsible" (click)="openModal(shareLinkModal)">
-          <i class="fa fa-wrench text-white"></i>
-          <span class="text-white">Settings</span>
-        </a>
+
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-secondary btn-collapsible" id="settingsDropdownResult" ngbDropdownToggle>
+            <i class="fa fa-wrench text-white"></i>
+            <span class="text-white">Settings</span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="settingsDropdownResult">
+            <label class="dropdown-item" ngbButtonLabel>
+              <input type="checkbox" ngbButton [(ngModel)]="resutlCollapsed"> Group by modules
+            </label>
+          </div>
+        </div>
       </div>
       <div class="pull-right ipvX">
           <span class="m-1">

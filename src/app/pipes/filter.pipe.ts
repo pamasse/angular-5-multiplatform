@@ -15,7 +15,7 @@ export class FilterPipe implements PipeTransform {
 
     searchQuery = searchQuery.toLowerCase();
 
-    return items.filter( it => {
+    const res = items.filter( it => {
       if (isModules) {
         return (modules[it].filter(el =>
           this.filterByType(el, searchQuery)
@@ -24,19 +24,23 @@ export class FilterPipe implements PipeTransform {
         return this.filterByType(it, searchQuery);
       }
     });
+
+    return res;
   }
 
   private filterByType(it, searchQuery) {
     if (typeof it === 'string') {
       return it.toLowerCase().includes(searchQuery);
     } else {
+      let found = false;
       for (const i in it) {
         if (typeof it[i] === 'string') {
-          return it[i].toLowerCase().includes(searchQuery);
+          found += it[i].toLowerCase().includes(searchQuery);
         } else {
-          return it[i].includes(searchQuery);
+          found += it[i].includes(searchQuery);
         }
       }
+      return found;
     }
   }
 

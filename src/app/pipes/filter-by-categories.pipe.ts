@@ -16,7 +16,7 @@ export class FilterByCategoriesPipe implements PipeTransform {
 
     const activeCat: any = [...Object.keys(searchQuery).slice(1, -1).filter(el => searchQuery[el])];
 
-    return items.filter( it => {
+    const res = items.filter( it => {
       if (isModules) {
         return (modules[it].filter(el =>
           activeCat.includes(el[attr].toLowerCase())
@@ -25,5 +25,6 @@ export class FilterByCategoriesPipe implements PipeTransform {
         return activeCat.includes(it[attr].toLowerCase());
       }
     });
+    return res;
   }
 }

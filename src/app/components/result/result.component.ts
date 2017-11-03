@@ -4,6 +4,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import {DnsCheckService} from '../../services/dns-check.service';
+import {AlertService} from '../../services/alert.service';
 
 @Component({
   selector: 'app-result',
@@ -14,13 +15,15 @@ export class ResultComponent implements OnInit {
 
   @Input() resultID: string;
 
+  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
+  private closeResult: string;
+
   public result = [];
   public modules: Object;
   public module_items: any = {};
   public modulesKeys;
   public searchQueryLength = 0;
   public resutlCollapsed = true;
-  private closeResult: string;
   public test: any = {params: {ipv4: false, ipv6: false}};
   public isCollapsed = [];
   public ns_list;
@@ -41,11 +44,12 @@ export class ResultComponent implements OnInit {
     critical: false,
     search: ''
   };
-  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public historyQuery: object;
+  public groupByModules: boolean;
 
   constructor(private activatedRoute: ActivatedRoute,
               private modalService: NgbModal,
+              private alertService: AlertService,
               private translateService: TranslateService,
               private dnsCheckService: DnsCheckService) {}
 
@@ -54,6 +58,9 @@ export class ResultComponent implements OnInit {
 
     if (this.resultID) {
       this.displayResult(this.resultID, language);
+      this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        this.displayResult(this.resultID, event.lang);
+      });
     } else {
       this.activatedRoute.params.subscribe((params: Params) => {
         this.resultID = params['resultID'];
@@ -118,6 +125,8 @@ export class ResultComponent implements OnInit {
       this.form = data['params'];
       this.ns_list = data['ns_list'];
       this.ds_list = data['ds_list'];
+    }, error => {
+      this.alertService.error('No data for this test');
     });
   }
 
