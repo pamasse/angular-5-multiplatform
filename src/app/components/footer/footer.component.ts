@@ -8,7 +8,7 @@ import {AppService} from '../../services/app.service';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
-  private version;
+  public version;
   public contactAddress: string;
 
   constructor(private dnsCheckService: DnsCheckService) {

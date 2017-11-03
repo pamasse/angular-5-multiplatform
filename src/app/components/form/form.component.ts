@@ -20,10 +20,6 @@ export class FormComponent implements OnInit {
   @Output() onDomainCheck = new EventEmitter<object>();
   @Output() onfetchFromParent = new EventEmitter<string>();
 
-  private checkboxForm: FormGroup;
-
-  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
-
   private NSFormConfig = {
     ns: [''],
     ip: ['']
@@ -40,6 +36,8 @@ export class FormComponent implements OnInit {
   public ds_list;
   public history = {};
   public test = {};
+  public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
+  public checkboxForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {}
 

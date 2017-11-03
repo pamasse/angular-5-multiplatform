@@ -108,7 +108,7 @@
       </tr>
       </thead>
       <tbody *ngIf="!resutlCollapsed;else resutlCollapsedTemplate">
-      <tr *ngFor="let item of result | filter : result_filter.search | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
+      <tr *ngFor="let item of result | filter : result_filter['search'] | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
         <th scope="row">{{i}}</th>
         <td>{{item.module|translate}}</td>
         <td>{{item.level}}</td>
@@ -145,7 +145,7 @@
 
 
 <ng-template #resutlCollapsedTemplate>
-  <tbody *ngFor="let moduleKey of modulesKeys | filter : result_filter.search:true:module_items | filterByCategories:result_filter:searchQueryLength:'level':true:module_items; let a = index" id="collapsed_module_{{a}}">
+  <tbody *ngFor="let moduleKey of modulesKeys | filter : result_filter['search']:true:module_items | filterByCategories:result_filter:searchQueryLength:'level':true:module_items; let a = index" id="collapsed_module_{{a}}">
   <tr (click)="isCollapsed[a] = !isCollapsed[a]"
       [attr.aria-expanded]="!isCollapsed[a]" aria-controls="collapseExample" class="expand bg-{{modules[moduleKey]}}" >
     <th scope="row" >
@@ -155,7 +155,7 @@
     </th>
     <td colspan="3">{{moduleKey|translate}}</td>
   </tr>
-  <tr [ngbCollapse]="isCollapsed[a]" *ngFor="let item of module_items[moduleKey] | filter : result_filter.search | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
+  <tr [ngbCollapse]="isCollapsed[a]" *ngFor="let item of module_items[moduleKey] | filter : result_filter['search'] | filterByCategories : result_filter:searchQueryLength:'level'; let i = index" class="bg-{{item.color}}">
     <th scope="row">{{i}}</th>
     <td>{{item.module|translate}}</td>
     <td>{{item.level}}</td>

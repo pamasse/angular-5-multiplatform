@@ -10,7 +10,7 @@ import {AlertService} from '../../services/alert.service';
 })
 export class DomainComponent implements OnInit {
   private intervalTime = 5 * 1000;
-  private is_advanced_options_enabled = false;
+  public is_advanced_options_enabled = false;
   public domain_check_progression = 0;
   public showResult = false;
   public showProgressBar = false;

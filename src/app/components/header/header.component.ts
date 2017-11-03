@@ -9,6 +9,7 @@ import {AppService} from '../../services/app.service';
 })
 export class HeaderComponent {
   public logoUrl: string;
+  public isNavbarCollapsed: boolean;
 
   constructor(private translateService: TranslateService) {
     this.translateService.setDefaultLang('en');

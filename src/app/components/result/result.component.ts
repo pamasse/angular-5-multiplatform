@@ -15,11 +15,10 @@ export class ResultComponent implements OnInit {
 
   @Input() resultID: string;
 
-  private form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   private closeResult: string;
-
+  public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public result = [];
-  public modules: Object;
+  public modules: any;
   public module_items: any = {};
   public modulesKeys;
   public searchQueryLength = 0;
@@ -28,14 +27,14 @@ export class ResultComponent implements OnInit {
   public isCollapsed = [];
   public ns_list;
   public ds_list;
-  public level_items: Object = {
+  public level_items = {
     info: [],
     notice: [],
     warning: [],
     error: [],
     critical: [],
   };
-  public result_filter: Object = {
+  public result_filter = {
     all: true,
     info: false,
     notice: false,
