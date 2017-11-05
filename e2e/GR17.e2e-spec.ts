@@ -6,11 +6,15 @@ describe('Zonemaster test GR17 - [All buttons should be clickable in latest vers
   const utils = new Utils();
   beforeAll(() => {
     utils.goToHome();
-    element(by.css('.fa-play-circle-o')).click();
   });
 
   it('should display error message', () => {
-    expect(element(by.css('.alert.alert-danger')).isPresent()).toBe(true);
+    element(by.css('form.domain a')).click();
+    browser.sleep(100).then(
+      () => {
+        expect(element(by.css('.alert.alert-danger')).isPresent()).toBe(false);
+      }
+    );
   });
   it('should display error message', () => {
     expect(browser.protractorImageComparison.checkScreen('domain.error_submit_without_domain')).toBeLessThan(1);

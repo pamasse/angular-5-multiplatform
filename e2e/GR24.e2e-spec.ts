@@ -5,13 +5,18 @@ import { Utils } from './pages/app.utils';
 describe('Zonemaster test GR24 - [Able to specify delegation parameters]', () => {
   const utils = new Utils();
   beforeAll(() => {
-    utils.goToHome();
-    utils.activeAdvancedOptions();
+    utils.goTo('preDelegatedDomainCheck');
   });
 
-  it('should be able to select Default profile', () => {
-    expect(element(by.css('div[formarrayname="itemRows"]')).getSize()).toEqual(1);
+  it('should be have one ns and digest form', () => {
+    expect(element.all(by.css('div[formArrayName="itemRows"]')).count()).toEqual(2);
+    expect(element.all(by.css('input[formControlName="keytag"')).count()).toEqual(1);
+    expect(element.all(by.css('input[formControlName="ns"')).count()).toEqual(1);
   });
 
-  // TODO !!!
+  it('should be have two ns and one digest form', () => {
+    element.all(by.css('div[formArrayName="itemRows"]')).get(0).element(by.css('.btn')).click();
+    expect(element.all(by.css('input[formControlName="ns"')).count()).toEqual(2);
+    expect(element.all(by.css('input[formControlName="keytag"')).count()).toEqual(1);
+  });
 });
