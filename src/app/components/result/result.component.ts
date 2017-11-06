@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
@@ -14,6 +14,7 @@ import {AlertService} from '../../services/alert.service';
 export class ResultComponent implements OnInit {
 
   @Input() resultID: string;
+  @ViewChild('resultView') resultView: ElementRef;
 
   private closeResult: string;
   public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
@@ -129,14 +130,92 @@ export class ResultComponent implements OnInit {
     });
   }
 
-  public exportFile() {
+  public exportJson() {
     const blob = new Blob([JSON.stringify(this.result)], {
       type: 'text/html;charset=utf-8'
     });
 
+    saveAs(blob, `zonemaster_result_${this.test['location']}.json`);
+  }
+  public exportHTML() {
+    const tempResutlCollapsed = this.resutlCollapsed;
+    this.resutlCollapsed = false;
+    setTimeout(() => {
+
+    const clone = this.resultView.nativeElement.cloneNode(true);
+    clone.querySelector('.result > div.row.d-block').remove();
+    clone.querySelectorAll('.result > div.row > div.col-md-6')[1].remove();
+
+    const result = `<!doctype html>
+    <html class="no-js" lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Zonemaster TEST</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" media="all">
+      </head>
+      <body style="margin-left: 20px;">
+        ${clone.innerHTML}
+      </body>
+    </html>`;
+
+    const blob = new Blob([result], {
+      type: 'text/html;charset=utf-8'
+    });
+
+    saveAs(blob, `zonemaster_result_${this.test['location']}.html`);
+    this.resutlCollapsed = tempResutlCollapsed;
+    }, 100);
+  }
+  public exportText() {
+    const csvData = this.ConvertTo([...this.result], 'txt');
+    const blob = new Blob([csvData], {
+      type: 'text/csv;charset=utf-8'
+    });
+
     saveAs(blob, `zonemaster_result_${this.test['location']}.txt`);
   }
+  public exportCSV() {
+    const csvData = this.ConvertTo([...this.result], 'csv');
+    const blob = new Blob([csvData], {
+      type: 'text/csv;charset=utf-8'
+    });
+    saveAs(blob, `zonemaster_result_${this.test['location']}.csv`);
+  }
+  ConvertTo(objArray, extension: string) {
+    const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+    let str = '';
+    let row = '';
+    let header = ['Module', 'Level', 'Message'];
 
+    for (const indexObj of header) {
+      if (extension === 'csv') {
+        row += indexObj + ';';
+      } else {
+        row += indexObj + ' \t';
+      }
+    }
+    row = row.slice(0, -1);
+    str += row + '\r\n';
+
+    for (let i = 1; i < array.length; i++) {
+      let line = '';
+      delete array[i].color;
+      for (const index of header) {
+        if (line !== '') {
+          if (extension === 'csv') {
+            line += ';';
+          } else {
+            line += ' \t';
+          }
+        }
+        line += array[i][index.toLowerCase()].trim();
+      }
+      str += line + '\r\n';
+    }
+    return str;
+  }
   private setItemsColors(data): void {
     for (const item in data) {
       if (['WARNING'].includes(this.result[item].level)) {
@@ -164,6 +243,9 @@ export class ResultComponent implements OnInit {
       }
       if (item.level === 'CRITICAL') {
         modules[item.module] = 'danger';
+      }
+      if (item.level === 'NOTICE') {
+        modules[item.module] = 'success';
       }
     }
     this.modules = modules;
