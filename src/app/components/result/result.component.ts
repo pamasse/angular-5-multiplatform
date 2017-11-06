@@ -169,15 +169,15 @@ export class ResultComponent implements OnInit {
     }, 100);
   }
   public exportText() {
-    const csvData = this.ConvertTo([...this.result], 'txt');
+    const csvData = this.ConvertTo([...this.result].slice(0), 'txt');
     const blob = new Blob([csvData], {
-      type: 'text/csv;charset=utf-8'
+      type: 'text/plain;charset=utf-8'
     });
 
     saveAs(blob, `zonemaster_result_${this.test['location']}.txt`);
   }
   public exportCSV() {
-    const csvData = this.ConvertTo([...this.result], 'csv');
+    const csvData = this.ConvertTo([...this.result].slice(0), 'csv');
     const blob = new Blob([csvData], {
       type: 'text/csv;charset=utf-8'
     });
@@ -187,7 +187,7 @@ export class ResultComponent implements OnInit {
     const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
     let str = '';
     let row = '';
-    let header = ['Module', 'Level', 'Message'];
+    const header = ['Module', 'Level', 'Message'];
 
     for (const indexObj of header) {
       if (extension === 'csv') {
@@ -201,7 +201,6 @@ export class ResultComponent implements OnInit {
 
     for (let i = 1; i < array.length; i++) {
       let line = '';
-      delete array[i].color;
       for (const index of header) {
         if (line !== '') {
           if (extension === 'csv') {
