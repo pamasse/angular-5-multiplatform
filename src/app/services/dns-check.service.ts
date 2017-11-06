@@ -19,8 +19,11 @@ export class DnsCheckService {
 
   private RPCRequest(method, params = {}) {
     const id = Date.now();
-    params['client_version'] = this.clientInfo['version'];
-    params['client_id'] = this.clientInfo['id'];
+
+    if (typeof params === 'object') {
+      params['client_version'] = this.clientInfo['version'];
+      params['client_id'] = this.clientInfo['id'];
+    }
     const data = {
       'jsonrpc': '2.0',
       id,
@@ -31,12 +34,12 @@ export class DnsCheckService {
     return new Promise((resolve, reject) => {
       this.http.post(this.backendUrl, data)
         .subscribe(res => {
-          if ('error' in res) {
-            console.log(res['error']);
-            this.alertService.error('Error');
-            reject(res['error']);
-          } else {
+          if ('result' in res) {
             resolve(res['result']);
+          } else {
+            this.alertService.error('Error');
+            console.error(res);
+            reject(res);
           }
         }, (err) => {
           this.alertService.error('Error');
