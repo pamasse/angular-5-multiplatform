@@ -6,16 +6,21 @@ import {AppService} from './app.service';
 @Injectable()
 export class DnsCheckService {
   private backendUrl: string;
+  private clientInfo: object;
 
   constructor(private alertService: AlertService, private http: HttpClient) {
     this.backendUrl = AppService.apiEndpoint();
+    this.clientInfo = AppService.getClientInfo();
+
     if (this.backendUrl) {
       console.error('Please set the api endpoint');
     }
   }
 
-  private RPCRequest(method, params = []) {
+  private RPCRequest(method, params = {}) {
     const id = Date.now();
+    params['client_version'] = this.clientInfo['version'];
+    params['client_id'] = this.clientInfo['id'];
     const data = {
       'jsonrpc': '2.0',
       id,
