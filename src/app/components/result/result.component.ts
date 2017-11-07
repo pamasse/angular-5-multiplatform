@@ -17,6 +17,7 @@ export class ResultComponent implements OnInit {
   @ViewChild('resultView') resultView: ElementRef;
 
   private closeResult: string;
+  private directAccess = false;
   public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public result = [];
   public modules: any;
@@ -51,12 +52,13 @@ export class ResultComponent implements OnInit {
               private modalService: NgbModal,
               private alertService: AlertService,
               private translateService: TranslateService,
-              private dnsCheckService: DnsCheckService) {}
-
+              private dnsCheckService: DnsCheckService) {
+     this.directAccess = this.activatedRoute.snapshot.data[0]['directAccess'];
+  }
   ngOnInit() {
     this.language = this.translateService.currentLang;
 
-    if (this.resultID) {
+    if (this.directAccess) {
       this.displayResult(this.resultID, this.language);
       this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
         this.displayResult(this.resultID, event.lang);

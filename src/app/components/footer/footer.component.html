@@ -1,21 +1,25 @@
-<footer class="footer">
-  <div class="row justify-content-between">
-    <div class=" offset-md-1 col-4">
-      <p> Project realized by <a>IIS</a> and <a>AFNIC</a>.
-        <span placement="top" [ngbTooltip]="tipContent">{{version}}</span>
-      </p>
-    </div>
-    <div class="col-4">
-      <div class="row">
-        <div class="col-6">
-          <i class="fa fa-envelope-o black-icon" aria-hidden="true"></i>
-          <a href="mailto:{{contactAddress}}">{{contactAddress}}</a>
-        </div>
-        <div class="col-6">
-          <i class="fa fa-github black-icon" aria-hidden="true"></i>
-          <a href="https://github.com/dotse/zonemaster">Github</a>
+<footer class="pb-0 pt-2 bg-light">
+  <div class="container">
+    <div class="row justify-content-between">
+      <div class="offset-md-1 col-md-4">
+          <span placement="top" [ngbTooltip]="tipContent">{{version}}</span>
+      </div>
+      <div class="col-md-5 pull-right">
+        <div class="row">
+          <div class="col-md-6">
+            <i class="fa fa-envelope-o black-icon" aria-hidden="true"></i>
+            <a href="mailto:{{contactAddress}}">{{contactAddress}}</a>
+          </div>
+          <div class="col-md-4">
+            <i class="fa fa-github black-icon" aria-hidden="true"></i>
+            <a href="https://github.com/dotse/zonemaster">Github</a>
+          </div>
         </div>
       </div>
+    </div>
+
+    <div class="row">
+      <p class="copyright text-muted small">Copyright &copy; AFNIC & IIS 2017. All Rights Reserved</p>
     </div>
   </div>
 </footer>

@@ -64,7 +64,7 @@ export class FormComponent implements OnInit {
     });
 
     formControlArray.valueChanges.subscribe((v) => {
-      this.checkboxForm.controls.selectedItems.setValue(this.mapItems(v));
+      this.checkboxForm.controls['selectedItems'].setValue(this.mapItems(v));
     });
 
     this.NSForm = this.formBuilder.group({

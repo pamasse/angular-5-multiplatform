@@ -2,10 +2,6 @@
   color: #000;
 }
 
-.footer {
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f7f7f7;
+footer {
+  box-shadow: inset -1px 7px 5px -9px rgba(0,0,0,0.75);
 }

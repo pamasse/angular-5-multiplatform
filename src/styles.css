@@ -3,14 +3,8 @@ html, body {
   padding:0;
 }
 
-
-.main {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  padding-left: 0;
-  padding-right: 0;
-  margin-bottom: 4rem;
-  text-align: center;
-  color: #efefef;
-  background: linear-gradient(135deg,#0143a3,#0273d4);
+.main h1 {
+  margin: 0;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+  font-size: 3em;
 }
