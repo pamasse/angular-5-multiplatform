@@ -1,9 +1,11 @@
-<div class="row">
+<div class="container-fuild">
+<div class="row mb-1">
   <div class="col-sm-10 offset-sm-1 text-center">
     <h1>{{'Domain name'|translate}}</h1>
     <div class="info-form">
       <form class="form-inline domain justify-content-center">
-        <input type="text"
+        <div class="input-group">
+          <input type="text"
                class="form-control form-control-lg"
                id="domain_check_name"
                name="domain_check_name"
@@ -11,15 +13,15 @@
                (keypress)="($event.which === 13)? runDomainCheck() : 0"
                placeholder="{{'Domain name'|translate}}"
                required>
-        <a title="{{'Run test'|translate}}"
-           onClick="return false;"
-           (click)="runDomainCheck();"
-           style="cursor: pointer;"
-           class="ml-2">
-          <span class="fa fa-play-circle-o fa-5x"></span>
-        </a>
+            <button title="{{'Run test'|translate}}"
+                   (click)="runDomainCheck();"
+                   class="launch ml-2 btn btn-lg text-white"
+                    type="button">
+              Launch
+            </button>
+        </div>
       </form>
-      <p class="ml-3 progress-result" *ngIf="showProgressBar">
+      <p class="progress-result" *ngIf="showProgressBar">
         <ngb-progressbar
           type="info"
           [value]="domain_check_progression"
@@ -136,4 +138,5 @@
       <br>
     </div>
   </div>
+</div>
 </div>

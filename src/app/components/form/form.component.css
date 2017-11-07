@@ -6,16 +6,22 @@
   color: #9ad;
 }
 
-form input[type=text] {
-  width:calc(100% - 110px);
-  float:left;
-  padding:0 10px;
-  border:1px solid #ddd;
-  border-right:none;
+.input-group {
+  width: 100%;
+}
+
+#domain_check_name {
   font-size:16px;
   height:64px;
   color:#6F787E;
   border-radius:3px
+}
+
+button.launch {
+  background-color: #FF5A5F;
+}
+button.launch:hover {
+  background-color: #ff3c3a;
 }
 
 /* The switch - the box around the slider */
@@ -78,7 +84,8 @@ input:checked + .slider:before {
 }
 
 .advanced {
-  margin-left: 125px;
+  margin-left: 6.7rem;
+  text-align: left;
 }
 
 .advanced > label {
@@ -91,13 +98,13 @@ input:checked + .slider:before {
 .progress-result {
   position: relative;
   text-align: center;
-  margin-right: 93px;
+  margin-top: 10px;
 }
 
 .progress-value {
   display: block;
-  width: 100%;
   color: #000;
+  width: 100%;
 }
 
 .nsForm {
