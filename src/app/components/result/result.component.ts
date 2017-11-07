@@ -45,7 +45,7 @@ export class ResultComponent implements OnInit {
     search: ''
   };
   public historyQuery: object;
-  public groupByModules: boolean;
+  public language: string;
 
   constructor(private activatedRoute: ActivatedRoute,
               private modalService: NgbModal,
@@ -54,21 +54,30 @@ export class ResultComponent implements OnInit {
               private dnsCheckService: DnsCheckService) {}
 
   ngOnInit() {
-    const language = this.translateService.currentLang;
+    this.language = this.translateService.currentLang;
 
     if (this.resultID) {
-      this.displayResult(this.resultID, language);
+      this.displayResult(this.resultID, this.language);
       this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
         this.displayResult(this.resultID, event.lang);
+        this.language = event.lang;
       });
     } else {
+      let notFirst = true;
       this.activatedRoute.params.subscribe((params: Params) => {
         this.resultID = params['resultID'];
-        this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        this.displayResult(this.resultID, this.language);
+      });
+      this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        if (notFirst) {
+          notFirst = !notFirst;
+        } else {
           this.displayResult(this.resultID, event.lang);
-        });
+        }
+        this.language = event.lang;
       });
     }
+
   }
 
   // Modal
