@@ -18,4 +18,8 @@ export class AppService {
     return environment.logoUrl;
   }
 
+  public static getClientInfo(): object {
+    return environment.clientInfo;
+  }
+
 }

@@ -6,16 +6,24 @@ import {AppService} from './app.service';
 @Injectable()
 export class DnsCheckService {
   private backendUrl: string;
+  private clientInfo: object;
 
   constructor(private alertService: AlertService, private http: HttpClient) {
     this.backendUrl = AppService.apiEndpoint();
+    this.clientInfo = AppService.getClientInfo();
+
     if (this.backendUrl) {
       console.error('Please set the api endpoint');
     }
   }
 
-  private RPCRequest(method, params = []) {
+  private RPCRequest(method, params = {}) {
     const id = Date.now();
+
+    if (typeof params === 'object') {
+      params['client_version'] = this.clientInfo['version'];
+      params['client_id'] = this.clientInfo['id'];
+    }
     const data = {
       'jsonrpc': '2.0',
       id,
@@ -26,12 +34,12 @@ export class DnsCheckService {
     return new Promise((resolve, reject) => {
       this.http.post(this.backendUrl, data)
         .subscribe(res => {
-          if ('error' in res) {
-            console.log(res['error']);
-            this.alertService.error('Error');
-            reject(res['error']);
-          } else {
+          if ('result' in res) {
             resolve(res['result']);
+          } else {
+            this.alertService.error('Error');
+            console.error(res);
+            reject(res);
           }
         }, (err) => {
           this.alertService.error('Error');
@@ -72,8 +80,11 @@ export class DnsCheckService {
     return this.RPCRequest('get_test_results', data);
   }
 
-  public getTestHistory(data) {
-    return this.RPCRequest('get_test_history', data);
+  public getTestHistory(data, offset = 0, limit = 100) {
+    return this.RPCRequest('get_test_history', {
+      offset,
+      limit,
+      'frontend_params': data});
   }
 
   public validateSyntax(data) {

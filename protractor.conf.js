@@ -10,9 +10,11 @@ exports.config = {
     './e2e/**/*.e2e-spec.ts'
   ],
   multiCapabilities: [{
-    'browserName': 'chrome'
+    'browserName': 'chrome',
+    'chromeOptions': {
+      'args': ['--disable-web-security', '--user-data-dir=~/.e2e-chrome-profile']
+    }
   }],
-  debug: true,
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
   framework: 'jasmine',

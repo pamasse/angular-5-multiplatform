@@ -1,4 +1,4 @@
-<div class="result">
+<div class="result" #resultView>
   <div class="row">
     <div class="col-md-6">
       <h2> {{'Test #'|translate}} {{ test.id }}</h2>
@@ -10,7 +10,7 @@
           <i class="fa fa-history text-white" aria-hidden="true"></i>
           <span class="text-white">{{'History'|translate}}</span>
         </a>
-        <a class="btn btn-info btn-collapsible" (click)="exportFile()">
+        <a class="btn btn-info btn-collapsible" (click)="openModal(exportModal)">
           <i class="fa fa-cloud-download text-white"></i>
           <span class="text-white">{{'Export'|translate}}</span>
         </a>
@@ -34,11 +34,11 @@
       <div class="pull-right ipvX">
           <span class="m-1">
             <i [ngClass]="{'fa-check-circle text-success': form['ipv4'], 'fa-times-circle text-danger': !form['ipv4']}" class="fa" aria-hidden="true"></i>
-            ipv4
+            IPv4
           </span>
         <span class="m-1 mr-3">
             <i [ngClass]="{'fa-check-circle text-success': form['ipv6'], 'fa-times-circle text-danger': !form['ipv6']}" class="fa" aria-hidden="true"></i>
-            ipv6
+            IPv6
           </span>
       </div>
     </div>
@@ -131,6 +131,21 @@
   </div>
 </ng-template>
 
+<ng-template #exportModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{'Export'|translate}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button class="btn" (click)="exportJson()"> JSON </button>
+    <button class="btn" (click)="exportCSV()"> CSV </button>
+    <button class="btn" (click)="exportHTML()"> HTML </button>
+    <button class="btn" (click)="exportText()"> TEXT </button>
+  </div>
+</ng-template>
+
 <ng-template #historyModal let-c="close" let-d="dismiss">
   <div class="modal-header">
   <h4 class="modal-title">{{'History'|translate}}</h4>
@@ -149,8 +164,8 @@
   <tr (click)="isCollapsed[a] = !isCollapsed[a]"
       [attr.aria-expanded]="!isCollapsed[a]" aria-controls="collapseExample" class="expand bg-{{modules[moduleKey]}}" >
     <th scope="row" >
-      <a >
-        {{a | romanize}}
+      <a placement="top" ngbTooltip="Collapse">
+        <i class="fa" [ngClass]="{'fa-plus': isCollapsed[a],'fa-minus': !isCollapsed[a]}" aria-hidden="true"></i>
       </a>
     </th>
     <td colspan="3">{{moduleKey|translate}}</td>

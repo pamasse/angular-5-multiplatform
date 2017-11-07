@@ -19,7 +19,7 @@
           <span class="fa fa-play-circle-o fa-5x"></span>
         </a>
       </form>
-      <p *ngIf="showProgressBar">
+      <p class="ml-3 progress-result" *ngIf="showProgressBar">
         <ngb-progressbar
           type="info"
           [value]="domain_check_progression"
@@ -108,7 +108,7 @@
         </form>
 
         <br>
-        <button class="btn btn-default" (click)="displayDataFromParent()">{{'Fetch data from parent zone'|translate}}</button>
+        <button class="btn btn-default fetchDataFromParent" (click)="displayDataFromParent()">{{'Fetch data from parent zone'|translate}}</button>
         <hr>
       </div>
 
