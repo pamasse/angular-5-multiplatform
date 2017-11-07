@@ -80,8 +80,11 @@ export class DnsCheckService {
     return this.RPCRequest('get_test_results', data);
   }
 
-  public getTestHistory(data) {
-    return this.RPCRequest('get_test_history', data);
+  public getTestHistory(data, offset = 0, limit = 100) {
+    return this.RPCRequest('get_test_history', {
+      offset,
+      limit,
+      'frontend_params': data});
   }
 
   public validateSyntax(data) {
