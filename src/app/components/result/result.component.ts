@@ -18,7 +18,7 @@ export class ResultComponent implements OnInit {
   @ViewChild('historyModal') historyModal: ElementRef;
 
   private closeResult: string;
-  private directAccess = false;
+  public directAccess = false;
   public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public result = [];
   public modules: any;

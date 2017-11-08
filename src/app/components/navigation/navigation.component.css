@@ -15,15 +15,18 @@ nav {
   height: 100px;
 }
 
-.shrink {
-  height: 60px;
-}
 
-.shrink .logo {
-  width: 200px;
-}
+@media(min-width:992px){
+  .shrink {
+    height: 60px;
+  }
 
-.shrink .github {
-  width: 60px;
-  height: 60px;
+  .shrink .logo {
+    width: 200px;
+  }
+
+  .shrink .github {
+    width: 60px;
+    height: 60px;
+  }
 }

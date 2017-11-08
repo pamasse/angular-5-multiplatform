@@ -9,7 +9,7 @@ import {AppService} from '../../services/app.service';
 })
 export class NavigationComponent implements OnInit {
   public logoUrl: string;
-  public isNavbarCollapsed: boolean;
+  public isNavbarCollapsed = false;
   public isShrunk = false;
   public lang = 'en';
 
@@ -29,8 +29,7 @@ export class NavigationComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   setLanguage(lang: string) {
     this.translateService.use(lang);

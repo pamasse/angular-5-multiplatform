@@ -1,7 +1,7 @@
 <footer class="pb-0 pt-2 bg-light">
   <div class="container">
     <div class="row justify-content-between">
-      <div class="offset-md-1 col-md-4">
+      <div class="col-md-4">
           <span placement="top" [ngbTooltip]="tipContent">{{version}}</span>
       </div>
       <div class="col-md-5 pull-right">
@@ -19,7 +19,9 @@
     </div>
 
     <div class="row">
-      <p class="copyright text-muted small">Copyright &copy; AFNIC & IIS 2017. All Rights Reserved</p>
+      <div class="col-md-12">
+        <p class="copyright text-muted small">Copyright &copy; AFNIC & IIS 2017. All Rights Reserved</p>
+      </div>
     </div>
   </div>
 </footer>

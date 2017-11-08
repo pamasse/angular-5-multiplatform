@@ -36,7 +36,6 @@ export class FooterComponent implements OnInit {
 
   private setVersionsText(data) {
     const res = [];
-    console.log(data);
     for (const item of Object.keys(data)) {
       res.push([item.replace('zonemaster_', ''), data[item].replace('v', '')]);
     }

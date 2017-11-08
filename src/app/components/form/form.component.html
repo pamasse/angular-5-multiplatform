@@ -44,10 +44,10 @@
             </ngb-progressbar>
           </p>
           <form [formGroup]="checkboxForm" class="checkboxForm">
-          <div class="options d-flex" [formArrayName]="'items'" [class.invalid]="!checkboxForm.controls.selectedItems.valid">
-            <div *ngFor="let protocol of checkboxForm.controls.items.controls; let i = index;"
+          <div class="options d-flex" [formArrayName]="'items'" [class.invalid]="!checkboxForm['controls'].selectedItems.valid">
+            <div *ngFor="let protocol of checkboxForm['controls'].items['controls']; let i = index;"
                  [formGroup]="protocol"
-                 [ngClass]="{'has-error': !checkboxForm.controls.selectedItems.valid}"
+                 [ngClass]="{'has-error': !checkboxForm['controls'].selectedItems.valid}"
                  class="form-check form-check-inline">
 
               <input type="checkbox" class="form-check-input" type="checkbox" formControlName="checked" id="protocol_{{ protocol.controls.key.value }}">
