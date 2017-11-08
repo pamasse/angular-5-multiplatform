@@ -17,13 +17,14 @@ export class DnsCheckService {
     }
   }
 
-  private RPCRequest(method, params = {}) {
+  private RPCRequest(method, params = {}, guiInfo = true) {
     const id = Date.now();
 
-    if (typeof params === 'object') {
+    if (guiInfo) {
       params['client_version'] = this.clientInfo['version'];
       params['client_id'] = this.clientInfo['id'];
     }
+
     const data = {
       'jsonrpc': '2.0',
       id,
@@ -61,11 +62,11 @@ export class DnsCheckService {
   }
 
   public getNSIps(domain) {
-    return this.RPCRequest('get_ns_ips', domain);
+    return this.RPCRequest('get_ns_ips', domain, false);
   }
 
   public getDataFromParentZone(domain) {
-    return this.RPCRequest('get_data_from_parent_zone', domain);
+    return this.RPCRequest('get_data_from_parent_zone', domain, false);
   }
 
   public startDomainTest(data) {
@@ -73,7 +74,7 @@ export class DnsCheckService {
   }
 
   public testProgress(testId) {
-    return this.RPCRequest('test_progress', testId);
+    return this.RPCRequest('test_progress', testId, false);
   }
 
   public getTestResults(data) {
@@ -92,7 +93,7 @@ export class DnsCheckService {
   }
 
   public fetchFromParent(domain) {
-    return this.RPCRequest('get_data_from_parent_zone', domain);
+    return this.RPCRequest('get_data_from_parent_zone', domain, false);
   }
 
 }

@@ -6,16 +6,27 @@
   color: #9ad;
 }
 
-form input[type=text] {
-  width:calc(100% - 110px);
-  float:left;
-  padding:0 10px;
-  border:1px solid #ddd;
-  border-right:none;
+.input-group {
+  width: 100%;
+}
+
+#domain_check_name {
   font-size:16px;
   height:64px;
   color:#6F787E;
   border-radius:3px
+}
+
+.checkboxForm {
+  width: 100%;
+}
+
+
+button.launch {
+  background-color: #FF5A5F;
+}
+button.launch:hover {
+  background-color: #ff3c3a;
 }
 
 /* The switch - the box around the slider */
@@ -54,15 +65,15 @@ form input[type=text] {
   transition: .4s;
 }
 
-input:checked + .slider {
+.advanced input:checked + .slider {
   background-color: #2196F3;
 }
 
-input:focus + .slider {
+.advanced input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
 }
 
-input:checked + .slider:before {
+.advanced input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -78,26 +89,54 @@ input:checked + .slider:before {
 }
 
 .advanced {
-  margin-left: 125px;
-}
-
-.advanced > label {
-  font-size: medium;
-  position: relative;
-  vertical-align: middle;
-  bottom: 1px;
+  margin-left: 6.7rem;
+  text-align: left;
 }
 
 .progress-result {
   position: relative;
-  text-align: center;
-  margin-right: 93px;
+  width: 100%;
 }
 
 .progress-value {
   display: block;
-  width: 100%;
   color: #000;
+  position: absolute;
+  right: 10px;
+}
+
+@media(min-width:576px){
+  .progress-result {
+    position: absolute;
+    z-index: 20;
+    width: 20.1rem;
+  }
+  .progress-value {
+    display: block;
+    color: #000;
+    position: absolute;
+    right: 10px;
+    font-size: 30px;
+  }
+  .checkboxForm {
+    width: inherit;
+  }
+
+}
+@media(min-width:768px){
+  .progress-result {
+    width: 29.5rem;
+  }
+}
+@media(min-width:992px){
+  .progress-result {
+    width: 42rem;
+  }
+}
+@media(min-width:1200px){
+  .progress-result {
+    width: 51.4rem;
+  }
 }
 
 .nsForm {

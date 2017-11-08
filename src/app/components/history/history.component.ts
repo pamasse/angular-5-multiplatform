@@ -10,26 +10,30 @@ import {AlertService} from '../../services/alert.service';
 })
 export class HistoryComponent implements OnInit {
 
-  @Input() query: object;
+  @Input() history: any[];
 
   public page = 1;
   public pageSize = 10;
 
-  public history: any[] = [];
   public historyItems: any[] = [];
 
   constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService) { }
 
   ngOnInit() {
-    // TODO Cache le resultat de la query si elle a deja été faite
-    this.dnsCheckService.getTestHistory(this.query).then(data => {
-      this.history = data as any[];
+    this.history = this.setColor(this.history);
+    this.setItemsByPage(1);
+  }
 
-      if (this.history.length === 0) {
-        this.alertService.info('No result for this query');
+  setColor(data) {
+    return data.map(item => {
+      if (['critical', 'error'].includes(item.overall_result)) {
+        item.color = 'danger';
+      } else if ('warning' === item.overall_result) {
+        item.color = 'warning';
+      } else if ('ok' === item.overall_result){
+        item.color = 'success';
       }
-
-      this.setItemsByPage(1);
+      return item;
     });
   }
 

@@ -1,11 +1,25 @@
-<div *ngIf="history.length > 0;else noHistory">
-  <div class="" *ngFor="let item of historyItems">
-    <span class="history-{{item.overall_result}}">&#x25C9;</span>&nbsp;
-    <a routerLink="/result/{{item.id}}" > {{ item.creation_time | date:"short" }} </a>
+<div class="container-fluid">
+  <div class="row">
+    <div *ngIf="history.length > 0;else noHistory" class="list-group w-100">
+      <div *ngFor="let item of historyItems" class="list-group-item list-group-item-action list-group-item-{{item.color}}">
+        <a routerLink="/result/{{item.id}}"> {{ item.creation_time | date:"short" }} </a>
+
+      </div>
+    </div>
   </div>
-  <ngb-pagination *ngIf="history.length > 1" [collectionSize]="history.length" [(page)]="page" [rotate]="true" [maxSize]="5" [boundaryLinks]="true" (pageChange)="setItemsByPage(page)"></ngb-pagination>
+  <div class="row mt-1">
+    <ngb-pagination class="m-auto"
+                    *ngIf="history.length > 1"
+                    [collectionSize]="history.length"
+                    [(page)]="page"
+                    [rotate]="true"
+                    [maxSize]="3"
+                    [boundaryLinks]="true"
+                    (pageChange)="setItemsByPage(page)">
+    </ngb-pagination>
+  </div>
 </div>
 
 <ng-template #noHistory>
-  <p class="text-dark">No historical data available</p>
+  <p class="text-dark">No historical data available yet</p>
 </ng-template>

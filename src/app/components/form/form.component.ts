@@ -64,7 +64,7 @@ export class FormComponent implements OnInit {
     });
 
     formControlArray.valueChanges.subscribe((v) => {
-      this.checkboxForm.controls.selectedItems.setValue(this.mapItems(v));
+      this.checkboxForm.controls['selectedItems'].setValue(this.mapItems(v));
     });
 
     this.NSForm = this.formBuilder.group({
@@ -122,9 +122,10 @@ export class FormComponent implements OnInit {
 
   public runDomainCheck() {
     if (this.preDelegated) {
-      this.form['nameservers'] = this.NSForm.value.itemRows;
-      this.form['ds_info'] = this.digestForm.value.itemRows;
+      this.form['nameservers'] = (this.NSForm.value.itemRows[0].ip !== '' ? this.NSForm.value.itemRows : []);
+      this.form['ds_info'] = (this.digestForm.value.itemRows[0].keytag !== '' ? this.digestForm.value.itemRows : []);
     }
+
     let atLeastOneChecked = false;
     const protocols = this.checkboxForm.value.items;
     for (const el of protocols) {
