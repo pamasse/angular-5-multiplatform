@@ -15,7 +15,6 @@ nav {
   height: 100px;
 }
 
-
 @media(min-width:992px){
   .shrink {
     height: 60px;

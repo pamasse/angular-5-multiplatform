@@ -27,16 +27,17 @@
       <div class="lang">
         <select name="lang" [(ngModel)]="lang" (change)="setLanguage(lang)" class="form-control" id="languageSelection">
           <option lang='en' value='en' [selected]="lang === 'en'">
-            <span class="flag-icon flag-icon-EN"></span> English
+            English
           </option>
           <option lang='fr' value='fr' [selected]="lang === 'fr'">
-            <span class="flag-icon flag-icon-FR"></span> Français
+            Français
           </option>
           <option lang='sv' value='sv' [selected]="lang === 'sv'">
-            <span class="flag-icon flag-icon-SV"></span> Svenska
+            Svenska
           </option>
         </select>
       </div>
     </div>
   </div>
 </nav>
+
