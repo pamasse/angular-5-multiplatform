@@ -55,16 +55,22 @@ export class ResultComponent implements OnInit {
               private dnsCheckService: DnsCheckService) {
      this.directAccess = this.activatedRoute.snapshot.data[0]['directAccess'];
   }
+
   ngOnInit() {
     this.language = this.translateService.currentLang;
+    console.log("-------- RESULT ");
+    console.log(this.directAccess);
+    console.log(this.resultID);
 
-    if (this.directAccess) {
+    if (!this.directAccess) {
+      console.log('--- 1')
       this.displayResult(this.resultID, this.language);
       this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
         this.displayResult(this.resultID, event.lang);
         this.language = event.lang;
       });
     } else {
+      console.log('--- 2')
       let notFirst = true;
       this.activatedRoute.params.subscribe((params: Params) => {
         this.resultID = params['resultID'];
@@ -103,6 +109,7 @@ export class ResultComponent implements OnInit {
 
 
   private displayResult(domainCheckId: string, language: string) {
+    console.log(domainCheckId)
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
       // TODO clean
 
