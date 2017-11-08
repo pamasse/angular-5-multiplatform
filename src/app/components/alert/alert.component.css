@@ -1,6 +1,8 @@
-.alert {
+.alert-area {
   z-index: 9999;
   position: absolute;
   margin-top: 110px;
-  width: 78%;
+  max-width: inherit;
+  width: 100%;
 }
+
