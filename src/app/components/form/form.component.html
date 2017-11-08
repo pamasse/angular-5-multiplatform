@@ -13,6 +13,16 @@
                  (keypress)="($event.which === 13)? runDomainCheck() : 0"
                  placeholder="{{'Domain name'|translate}}"
                  required>
+            <p class="progress-result" *ngIf="showProgressBar">
+              <ngb-progressbar
+                type="info"
+                [value]="domain_check_progression"
+                [striped]="true"
+                [animated]="true"
+              >
+                <span class="progress-value">{{domain_check_progression}}%</span>
+              </ngb-progressbar>
+            </p>
               <button title="{{'Run test'|translate}}"
                      (click)="runDomainCheck();"
                      class="launch ml-2 btn btn-lg text-white"
@@ -40,17 +50,6 @@
             <option value="test_profile_2">Test profile 2</option>
           </select>
         </form>
-
-        <p class="progress-result" *ngIf="showProgressBar">
-          <ngb-progressbar
-            type="info"
-            [value]="domain_check_progression"
-            [striped]="true"
-            [animated]="true"
-          >
-            <span class="progress-value">{{domain_check_progression}}%</span>
-          </ngb-progressbar>
-        </p>
         <div class="alert alert-danger" role="alert" [class.invalid]="!checkboxForm.controls.selectedItems.valid" *ngIf="!checkboxForm.controls.selectedItems.valid">
           At least one protocol (IPv4 or IPv6) is required in advanced options!
         </div>
