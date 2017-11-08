@@ -38,22 +38,14 @@ export class DnsCheckService {
           if ('result' in res) {
             resolve(res['result']);
           } else {
-            this.alertService.error('Error');
             console.error(res);
             reject(res);
           }
         }, (err) => {
-          this.alertService.error('Error');
           console.error(err);
           reject(err);
         });
     });
-  }
-
-  // TODO to valid with michal
-  private getUserIp() {
-    this.http.get('http://api.ipify.org')
-      .subscribe(response => console.log(response));
   }
 
   // API Implementation from https://github.com/dotse/zonemaster-backend/blob/master/docs/API.md

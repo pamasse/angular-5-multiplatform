@@ -66,6 +66,8 @@ export class DomainComponent implements OnInit {
             }, this.intervalTime);
           });
         }
+      }, error => {
+        this.alertService.error(`Server error`);
       }
     );
   }

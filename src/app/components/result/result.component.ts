@@ -145,8 +145,9 @@ export class ResultComponent implements OnInit {
   }
 
   public getHistory() {
-    console.log(this.history);
+
     if (!this.history) {
+      this.alertService.info('History information request is in progress');
       this.dnsCheckService.getTestHistory(this.historyQuery).then(data => {
         this.history = data as any[];
         if (this.history.length === 0) {
@@ -162,7 +163,7 @@ export class ResultComponent implements OnInit {
 
   public exportJson() {
     const blob = new Blob([JSON.stringify(this.result)], {
-      type: 'text/html;charset=utf-8'
+      type: 'application/javascript'
     });
 
     saveAs(blob, `zonemaster_result_${this.test['location']}.json`);
