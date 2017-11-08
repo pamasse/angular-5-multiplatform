@@ -9,26 +9,38 @@ import {AlertService} from '../../services/alert.service';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
-  public version;
+  public version: string;
+  public versions: any[];
   public contactAddress: string;
+  public clientInfo: object;
 
   constructor(private dnsCheckService: DnsCheckService, private alertService: AlertService) {
     this.contactAddress = AppService.getContactAddress();
+    this.clientInfo = AppService.getClientInfo();
   }
 
   ngOnInit() {
     this.getAppVersion();
   }
 
-  getAppVersion(): void {
+  private getAppVersion(): void {
     const self = this;
     this.dnsCheckService.versionInfo().then( res => {
       self.version = `Zonemaster Versions`;
-     // ${res['zonemaster_engine']}
+      self.versions = this.setVersionsText(res as any[]);
     }, err => {
       this.alertService.error('Zonemaster Backend is not available');
       console.error(err);
     });
   }
 
+  private setVersionsText(data) {
+    const res = [];
+    console.log(data);
+    for (const item of Object.keys(data)) {
+      res.push([item.replace('zonemaster_', ''), data[item].replace('v', '')]);
+    }
+    res.push(['GUI', this.clientInfo['version']]);
+    return res;
+  }
 }

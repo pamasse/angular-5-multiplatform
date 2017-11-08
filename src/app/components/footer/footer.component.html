@@ -27,20 +27,12 @@
 <ng-template #tipContent>
   <table>
     <tbody>
-    <tr>
-      <td>
-        Engine
+    <tr *ngFor="let item of versions">
+      <td  align="left">
+        {{item[0]}}
       </td>
-      <td>
-        2.1
-      </td>
-    </tr>
-    <tr>
-      <td>
-        GUI
-      </td>
-      <td>
-        2.1
+      <td  align="right">
+        {{item[1]}}
       </td>
     </tr>
     </tbody>
