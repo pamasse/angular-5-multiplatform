@@ -40,6 +40,7 @@ describe('Zonemaster test GR07 - [The advanced view should support the possibili
     element(by.css('#protocol_ipv4')).click();
     element(by.css('#protocol_ipv6')).click();
     expect(element(by.css('.alert.alert-danger')).isPresent()).toBe(true);
-    expect(element(by.css('.alert.alert-danger')).getText()).toEqual('At least one protocol (IPv4 or IPv6) is required in advanced options!');
+    expect(element(by.css('.alert.alert-danger')).getText())
+      .toEqual('At least one protocol (IPv4 or IPv6) is required in advanced options!');
   });
 });

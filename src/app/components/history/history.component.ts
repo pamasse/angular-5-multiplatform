@@ -30,7 +30,7 @@ export class HistoryComponent implements OnInit {
         item.color = 'danger';
       } else if ('warning' === item.overall_result) {
         item.color = 'warning';
-      } else if ('ok' === item.overall_result){
+      } else if ('ok' === item.overall_result) {
         item.color = 'success';
       }
       return item;
