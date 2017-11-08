@@ -1,4 +1,4 @@
-import { Component, NgZone} from '@angular/core';
+import { Component, OnInit, NgZone} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {AppService} from '../../services/app.service';
 
@@ -7,7 +7,7 @@ import {AppService} from '../../services/app.service';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css'],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
   public logoUrl: string;
   public isNavbarCollapsed: boolean;
   public isShrunk = false;
@@ -16,16 +16,20 @@ export class NavigationComponent {
     this.translateService.setDefaultLang('en');
     this.translateService.use(this.translateService.getBrowserLang());
     this.logoUrl = AppService.getLogoUrl();
-     window.onscroll = () => {
-        zone.run(() => {
-          if (window.pageYOffset > 0) {
-            this.isShrunk = true;
-          } else {
-            this.isShrunk = false;
-          }
-        });
-      };
-    }
+    window.onscroll = () => {
+      zone.run(() => {
+        if (window.pageYOffset > 0) {
+          this.isShrunk = true;
+        } else {
+          this.isShrunk = false;
+        }
+      });
+    };
+  }
+
+  ngOnInit() {
+  }
+
   setLanguage(lang: string) {
     this.translateService.use(lang);
   }

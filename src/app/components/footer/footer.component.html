@@ -8,11 +8,11 @@
         <div class="row">
           <div class="col-md-6">
             <i class="fa fa-envelope-o black-icon" aria-hidden="true"></i>
-            <a href="mailto:{{contactAddress}}">{{contactAddress}}</a>
+            <a class="text-dark" href="mailto:{{contactAddress}}">{{contactAddress}}</a>
           </div>
           <div class="col-md-4">
             <i class="fa fa-github black-icon" aria-hidden="true"></i>
-            <a href="https://github.com/dotse/zonemaster">Github</a>
+            <a class="text-dark" href="https://github.com/dotse/zonemaster">Github</a>
           </div>
         </div>
       </div>
@@ -25,8 +25,24 @@
 </footer>
 
 <ng-template #tipContent>
-  <ul>
-    <li>Engine : 2.1</li>
-    <li>Gui : 2.1</li>
-  </ul>
+  <table>
+    <tbody>
+    <tr>
+      <td>
+        Engine
+      </td>
+      <td>
+        2.1
+      </td>
+    </tr>
+    <tr>
+      <td>
+        GUI
+      </td>
+      <td>
+        2.1
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </ng-template>
