@@ -13,7 +13,7 @@
                  (keypress)="($event.which === 13)? runDomainCheck() : 0"
                  placeholder="{{'Domain name'|translate}}"
                  required>
-            <p class="progress-result" *ngIf="showProgressBar">
+            <p class="progress-result d-none d-sm-block" *ngIf="showProgressBar">
               <ngb-progressbar
                 type="info"
                 [value]="domain_check_progression"
@@ -31,7 +31,19 @@
                 Check
               </button>
           </div>
-          <form [formGroup]="checkboxForm">
+
+          <p class="progress-result d-sm-none" *ngIf="showProgressBar">
+            <!-- Progress Bar for extra small devices -->
+            <ngb-progressbar
+              type="info"
+              [value]="domain_check_progression"
+              [striped]="true"
+              [animated]="true"
+            >
+              <span class="progress-value">{{domain_check_progression}}%</span>
+            </ngb-progressbar>
+          </p>
+          <form [formGroup]="checkboxForm" class="checkboxForm">
           <div class="options d-flex" [formArrayName]="'items'" [class.invalid]="!checkboxForm.controls.selectedItems.valid">
             <div *ngFor="let protocol of checkboxForm.controls.items.controls; let i = index;"
                  [formGroup]="protocol"
@@ -51,6 +63,7 @@
             <option value="test_profile_2">Test profile 2</option>
           </select>
         </form>
+
         <div class="alert alert-danger" role="alert" [class.invalid]="!checkboxForm.controls.selectedItems.valid" *ngIf="!checkboxForm.controls.selectedItems.valid">
           At least one protocol (IPv4 or IPv6) is required in advanced options!
         </div>

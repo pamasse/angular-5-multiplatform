@@ -9,7 +9,10 @@ html, body {
   font-size: 3em;
 }
 
-.progress {
-  height: 64px !important;
-  opacity: .3;
+
+@media(min-width:576px){
+  .progress {
+    height: 64px !important;
+    opacity: .3;
+  }
 }
