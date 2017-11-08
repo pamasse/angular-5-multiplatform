@@ -11,10 +11,12 @@ export class NavigationComponent implements OnInit {
   public logoUrl: string;
   public isNavbarCollapsed: boolean;
   public isShrunk = false;
+  public lang = 'en';
 
   constructor(private translateService: TranslateService, zone: NgZone) {
-    this.translateService.setDefaultLang('en');
-    this.translateService.use(this.translateService.getBrowserLang());
+    this.translateService.setDefaultLang(this.lang);
+    this.lang = this.translateService.getBrowserLang();
+    this.translateService.use(this.lang);
     this.logoUrl = AppService.getLogoUrl();
     window.onscroll = () => {
       zone.run(() => {
