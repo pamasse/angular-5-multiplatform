@@ -9,7 +9,7 @@
     </div>
     <div class="col-md-6">
       <div class="pull-right actions_btn" >
-        <a class="btn btn-warning btn-collapsible" (click)="openModal(historyModal)">
+        <a class="btn btn-warning btn-collapsible" (click)="getHistory()">
           <i class="fa fa-history text-white" aria-hidden="true"></i>
           <span class="text-white">{{'History'|translate}}</span>
         </a>
@@ -157,7 +157,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <app-history [query]="historyQuery"></app-history>
+    <app-history [history]="history"></app-history>
   </div>
 </ng-template>
 

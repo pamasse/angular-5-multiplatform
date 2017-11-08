@@ -19,15 +19,11 @@ export class DnsCheckService {
 
   private RPCRequest(method, params = {}, guiInfo = true) {
     const id = Date.now();
-    console.log('---------------')
-    console.log(params);
-    console.log(typeof params);
 
     if (guiInfo) {
       params['client_version'] = this.clientInfo['version'];
       params['client_id'] = this.clientInfo['id'];
     }
-
 
     const data = {
       'jsonrpc': '2.0',

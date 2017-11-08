@@ -15,6 +15,7 @@ export class ResultComponent implements OnInit {
 
   @Input() resultID: string;
   @ViewChild('resultView') resultView: ElementRef;
+  @ViewChild('historyModal') historyModal: ElementRef;
 
   private closeResult: string;
   private directAccess = false;
@@ -46,6 +47,7 @@ export class ResultComponent implements OnInit {
     search: ''
   };
   public historyQuery: object;
+  public history: any[];
   public language: string;
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -58,19 +60,14 @@ export class ResultComponent implements OnInit {
 
   ngOnInit() {
     this.language = this.translateService.currentLang;
-    console.log("-------- RESULT ");
-    console.log(this.directAccess);
-    console.log(this.resultID);
 
     if (!this.directAccess) {
-      console.log('--- 1')
       this.displayResult(this.resultID, this.language);
       this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
         this.displayResult(this.resultID, event.lang);
         this.language = event.lang;
       });
     } else {
-      console.log('--- 2')
       let notFirst = true;
       this.activatedRoute.params.subscribe((params: Params) => {
         this.resultID = params['resultID'];
@@ -88,7 +85,6 @@ export class ResultComponent implements OnInit {
 
   }
 
-  // Modal
   public openModal(content) {
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -109,7 +105,7 @@ export class ResultComponent implements OnInit {
 
 
   private displayResult(domainCheckId: string, language: string) {
-    console.log(domainCheckId)
+
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
       // TODO clean
 
@@ -146,6 +142,22 @@ export class ResultComponent implements OnInit {
     }, error => {
       this.alertService.error('No data for this test');
     });
+  }
+
+  public getHistory() {
+    console.log(this.history);
+    if (!this.history) {
+      this.dnsCheckService.getTestHistory(this.historyQuery).then(data => {
+        this.history = data as any[];
+        if (this.history.length === 0) {
+          this.alertService.info('No result for this query');
+        } else {
+          this.openModal(this.historyModal);
+        }
+      });
+    } else {
+      this.openModal(this.historyModal);
+    }
   }
 
   public exportJson() {

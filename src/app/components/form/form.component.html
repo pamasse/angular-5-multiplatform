@@ -24,9 +24,10 @@
               </ngb-progressbar>
             </p>
               <button title="{{'Run test'|translate}}"
-                     (click)="runDomainCheck();"
-                     class="launch ml-2 btn btn-lg text-white"
-                      type="button">
+                      (click)="runDomainCheck();"
+                      class="launch ml-2 btn btn-lg text-white"
+                      type="button"
+                      [disabled]="showProgressBar">
                 Check
               </button>
           </div>
