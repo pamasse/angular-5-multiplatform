@@ -28,11 +28,9 @@ import {DnsCheckService} from './services/dns-check.service';
 import {AlertService} from './services/alert.service';
 import { HeaderComponent } from './components/header/header.component';
 
-
-
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, `assets/i18n/`, '.json');
 }
 
 const appRoutes: Routes = [
