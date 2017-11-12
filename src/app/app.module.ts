@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { DomainComponent } from './components/domain/domain.component';
 import { FaqComponent } from './components/faq/faq.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { HeaderComponent } from './components/header/header.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FormComponent } from './components/form/form.component';
 import { ResultComponent } from './components/result/result.component';
@@ -26,6 +26,7 @@ import { RomanizePipe } from './pipes/romanize.pipe';
 import { AppService } from './services/app.service';
 import {DnsCheckService} from './services/dns-check.service';
 import {AlertService} from './services/alert.service';
+import { HeaderComponent } from './components/header/header.component';
 
 
 
@@ -37,7 +38,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 const appRoutes: Routes = [
   { path: 'domainCheck', component: DomainComponent, data: [{preDelegated: false}] },
   { path: 'preDelegatedDomainCheck', component: DomainComponent, data: [{preDelegated: true}] },
-  { path: 'result/:resultID', component: ResultComponent},
+  { path: 'result/:resultID', component: ResultComponent, data: [{directAccess: true}]},
   { path: 'history', component: HistoryComponent},
   { path: 'faq', component: FaqComponent },
   { path: '',
@@ -53,7 +54,7 @@ const appRoutes: Routes = [
     DomainComponent,
     FaqComponent,
     PageNotFoundComponent,
-    HeaderComponent,
+    NavigationComponent,
     FooterComponent,
     FormComponent,
     FilterPipe,
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
     RomanizePipe,
     ResultComponent,
     HistoryComponent,
-    AlertComponent
+    AlertComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

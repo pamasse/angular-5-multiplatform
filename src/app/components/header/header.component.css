@@ -1,25 +1,11 @@
-.lang {
-  position: absolute;
-  top: 0;
-  right: 0;
+.main {
+  padding-top: 10rem;
+  padding-bottom: 5rem;
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 4rem;
+  text-align: center;
+  color: #efefef;
+  background: linear-gradient(135deg, #1b294a,#0273d4);
 }
 
-.lang a {
-  color: #fff;
-  font-size: small;
-  cursor: pointer;
-}
-
-.navbar-nav a.nav-link {
-  color: #fff;
-}
-.navbar-nav a.nav-link.active {
-  color: #fff;
-  font-weight: bold;
-}
-
-.header {
-  border  : 1px solid #fff;
-  border-width  : 0 0 1px 0;
-  min-height: 60px;
-}

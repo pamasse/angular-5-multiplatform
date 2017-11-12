@@ -1,23 +1,13 @@
-import { Component} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {AppService} from '../../services/app.service';
+import { Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
-  public logoUrl: string;
-  public isNavbarCollapsed: boolean;
+export class HeaderComponent implements OnInit {
+  constructor() { }
 
-  constructor(private translateService: TranslateService) {
-    this.translateService.setDefaultLang('en');
-    this.translateService.use(this.translateService.getBrowserLang());
-    this.logoUrl = AppService.getLogoUrl();
-  }
-
-  setLanguage(lang: string) {
-    this.translateService.use(lang);
+  ngOnInit() {
   }
 }

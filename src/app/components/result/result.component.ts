@@ -15,8 +15,10 @@ export class ResultComponent implements OnInit {
 
   @Input() resultID: string;
   @ViewChild('resultView') resultView: ElementRef;
+  @ViewChild('historyModal') historyModal: ElementRef;
 
   private closeResult: string;
+  public directAccess = false;
   public form = {ipv4: true, ipv6: true, profile: 'default_profile', domain: ''};
   public result = [];
   public modules: any;
@@ -45,18 +47,21 @@ export class ResultComponent implements OnInit {
     search: ''
   };
   public historyQuery: object;
+  public history: any[];
   public language: string;
 
   constructor(private activatedRoute: ActivatedRoute,
               private modalService: NgbModal,
               private alertService: AlertService,
               private translateService: TranslateService,
-              private dnsCheckService: DnsCheckService) {}
+              private dnsCheckService: DnsCheckService) {
+     this.directAccess = this.activatedRoute.snapshot.data[0]['directAccess'];
+  }
 
   ngOnInit() {
     this.language = this.translateService.currentLang;
 
-    if (this.resultID) {
+    if (!this.directAccess) {
       this.displayResult(this.resultID, this.language);
       this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
         this.displayResult(this.resultID, event.lang);
@@ -77,9 +82,9 @@ export class ResultComponent implements OnInit {
         this.language = event.lang;
       });
     }
+
   }
 
-  // Modal
   public openModal(content) {
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -100,6 +105,7 @@ export class ResultComponent implements OnInit {
 
 
   private displayResult(domainCheckId: string, language: string) {
+
     this.dnsCheckService.getTestResults({id: domainCheckId, language}).then(data => {
       // TODO clean
 
@@ -138,9 +144,26 @@ export class ResultComponent implements OnInit {
     });
   }
 
+  public getHistory() {
+
+    if (!this.history) {
+      this.alertService.info('History information request is in progress');
+      this.dnsCheckService.getTestHistory(this.historyQuery).then(data => {
+        this.history = data as any[];
+        if (this.history.length === 0) {
+          this.alertService.info('No result for this query');
+        } else {
+          this.openModal(this.historyModal);
+        }
+      });
+    } else {
+      this.openModal(this.historyModal);
+    }
+  }
+
   public exportJson() {
     const blob = new Blob([JSON.stringify(this.result)], {
-      type: 'text/html;charset=utf-8'
+      type: 'application/javascript'
     });
 
     saveAs(blob, `zonemaster_result_${this.test['location']}.json`);
