@@ -33,3 +33,10 @@ nav {
     height: 60px;
   }
 }
+
+.back-to-top {
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}

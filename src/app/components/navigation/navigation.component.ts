@@ -11,6 +11,7 @@ export class NavigationComponent implements OnInit {
   public logoUrl: string;
   public isNavbarCollapsed = false;
   public isShrunk = false;
+  public activeBackToTop = false;
   public lang = 'en';
 
   constructor(private translateService: TranslateService, zone: NgZone) {
@@ -25,13 +26,23 @@ export class NavigationComponent implements OnInit {
         } else {
           this.isShrunk = false;
         }
+
+        if (window.pageYOffset > 250) {
+          this.activeBackToTop = true;
+        } else {
+          this.activeBackToTop = false;
+        }
       });
     };
   }
 
   ngOnInit() {}
 
-  setLanguage(lang: string) {
+  public backToTop() {
+    window.scrollTo(0, 0);
+  }
+
+  public setLanguage(lang: string) {
     this.translateService.use(lang);
   }
 }

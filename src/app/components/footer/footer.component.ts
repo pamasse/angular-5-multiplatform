@@ -26,7 +26,6 @@ export class FooterComponent implements OnInit {
   private getAppVersion(): void {
     const self = this;
     this.dnsCheckService.versionInfo().then( res => {
-      self.version = `Zonemaster Versions`;
       self.versions = this.setVersionsText(res as any[]);
     }, err => {
       this.alertService.error('Zonemaster Backend is not available');

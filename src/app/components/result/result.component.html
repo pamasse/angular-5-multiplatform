@@ -5,7 +5,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2>{{'Test #'|translate}}{{ test.id }}<small> - {{form.domain}}</small></h2>
-      <i>{{'Executed at'|translate}} {{ test.creation_time | date:"short" }}</i>
+      <i>{{'Executed at'|translate}} {{ test.creation_time | date:'M/d/yy, h:mm a z' }}</i>
     </div>
     <div class="col-md-6">
       <div class="pull-right actions_btn" >

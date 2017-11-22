@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ElementRef, ViewChild } from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
@@ -11,9 +11,9 @@ import {AlertService} from '../../services/alert.service';
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css']
 })
-export class ResultComponent implements OnInit {
+export class ResultComponent implements OnInit, OnChanges {
 
-  @Input() resultID: string;
+  @Input('resultID') resultID: string;
   @ViewChild('resultView') resultView: ElementRef;
   @ViewChild('historyModal') historyModal: ElementRef;
 
@@ -56,10 +56,15 @@ export class ResultComponent implements OnInit {
               private translateService: TranslateService,
               private dnsCheckService: DnsCheckService) {
      this.directAccess = this.activatedRoute.snapshot.data[0]['directAccess'];
+      console.log(this.resultID);
+
   }
 
   ngOnInit() {
     this.language = this.translateService.currentLang;
+    console.log(this.resultID);
+
+    // Le result ID ne passe pas par la lorsque domaine.ts change une seconde fois l'ID !!!
 
     if (!this.directAccess) {
       this.displayResult(this.resultID, this.language);
@@ -83,6 +88,10 @@ export class ResultComponent implements OnInit {
       });
     }
 
+  }
+
+  ngOnChanges() {
+    this.displayResult(this.resultID, this.language);
   }
 
   public openModal(content) {

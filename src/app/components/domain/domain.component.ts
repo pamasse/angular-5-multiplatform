@@ -53,14 +53,12 @@ export class DomainComponent implements OnInit {
 
                 if (res === 100) {
                   clearInterval(handle);
-                  if (!this.showResult) {
-                    this.alertService.success(`Domain ${data['domain']} checked with success`);
-                    self.resultID = domainCheckId;
-                    self.is_advanced_options_enabled = false;
-                    self.showResult = true;
-                    self.showProgressBar = false;
-                    self.domain_check_progression = 0;
-                  }
+                  this.alertService.success(`Domain ${data['domain']} checked with success`);
+                  self.resultID = domainCheckId;
+                  self.is_advanced_options_enabled = false;
+                  self.showResult = true;
+                  self.showProgressBar = false;
+                  self.domain_check_progression = 0;
                 }
               });
             }, this.intervalTime);
