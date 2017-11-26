@@ -17,6 +17,7 @@ export class DomainComponent implements OnInit {
   public preDelegated;
   public parentData: object;
   public resultID = '';
+  public simpleMode = true;
 
   constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService, route: ActivatedRoute) {
     this.preDelegated = route.snapshot.data[0]['preDelegated'];
@@ -69,4 +70,9 @@ export class DomainComponent implements OnInit {
       }
     );
   }
+
+  public toggleMode() {
+    this.simpleMode = !this.simpleMode;
+  }
+
 }

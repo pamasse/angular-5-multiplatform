@@ -7,6 +7,8 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarkdownModule } from 'angular2-markdown';
+import {DndModule} from 'ng2-dnd';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { DomainComponent } from './components/domain/domain.component';
@@ -27,6 +29,7 @@ import { AppService } from './services/app.service';
 import {DnsCheckService} from './services/dns-check.service';
 import {AlertService} from './services/alert.service';
 import { HeaderComponent } from './components/header/header.component';
+import { BatchModeFormComponent } from './components/batch-mode-form/batch-mode-form.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -61,7 +64,8 @@ const appRoutes: Routes = [
     ResultComponent,
     HistoryComponent,
     AlertComponent,
-    HeaderComponent
+    HeaderComponent,
+    BatchModeFormComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +73,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    BrowserAnimationsModule,
     MarkdownModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -80,7 +85,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
-    )
+    ),
+    DndModule.forRoot()
   ],
   providers: [
     AppService,
