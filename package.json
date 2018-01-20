@@ -6,10 +6,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:web": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "serve:webextension": "ng serve --app 2",
+    "build:web": "ng build --app 0",
+    "build:webextension": "rimraf ./dist-webextension && ng build --app 2 --aot --prod --sourcemap=false --output-hashing=none && web-ext build --source-dir=dist-webextension --artifacts-dir=.",
     "build:wordpress:plugin": "",
     "build-electron": "rimraf ./dist-electron && ng build --app 1 -e electron --base-href ./ && npm run electron-ntsc && cross-os cp-package",
     "electron-ntsc": "ntsc src/environments/environment.electron.ts --outDir dist-electron/environments",
@@ -27,6 +29,8 @@
   },
   "private": false,
   "dependencies": {
+    "@angular-devkit/core": "0.0.28",
+    "@angular-devkit/schematics": "0.0.51",
     "@angular/animations": "^5.2.1",
     "@angular/common": "^5.2.1",
     "@angular/compiler": "^5.2.1",
@@ -49,7 +53,6 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.5",
     "@angular/compiler-cli": "^5.2.1",
     "@angular/language-service": "^5.2.1",
     "@types/file-saver": "^1.3.0",
@@ -77,6 +80,7 @@
     "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
     "typescript": "^2.5.3",
+    "web-ext": "^2.3.1",
     "web-ext-types": "^2.0.1"
   }
 }

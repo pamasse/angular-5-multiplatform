@@ -14,7 +14,7 @@ import { FaqComponent } from './components/faq/faq.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { FormComponent } from './components/form/form.component';
+import { HeaderComponent } from './components/header/header.component';
 import { ResultComponent } from './components/result/result.component';
 import { HistoryComponent } from './components/history/history.component';
 import { AlertComponent } from './components/alert/alert.component';
@@ -26,7 +26,8 @@ import { RomanizePipe } from './pipes/romanize.pipe';
 import { AppService } from './services/app.service';
 import {DnsCheckService} from './services/dns-check.service';
 import {AlertService} from './services/alert.service';
-import { HeaderComponent } from './components/header/header.component';
+
+import { SharedModule } from './modules/shared/shared.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,7 +55,6 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     NavigationComponent,
     FooterComponent,
-    FormComponent,
     FilterPipe,
     FilterByCategoriesPipe,
     RomanizePipe,
@@ -80,7 +80,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
-    )
+    ),
+    SharedModule
   ],
   providers: [
     AppService,

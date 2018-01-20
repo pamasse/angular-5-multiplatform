@@ -1,0 +1,8 @@
+<app-form [is_advanced_options_enabled]="is_advanced_options_enabled"
+          [preDelegated]="preDelegated"
+          [domain_check_progression]="domain_check_progression"
+          [showProgressBar]="showProgressBar"
+          [parentData]="parentData"
+          (onDomainCheck)="domainCheck($event)"
+          (onfetchFromParent)="fetchFromParent($event)"
+></app-form>

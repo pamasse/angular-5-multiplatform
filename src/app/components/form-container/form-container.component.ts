@@ -1,27 +1,25 @@
-import {Component, OnInit} from '@angular/core';
+///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
+import {Component} from '@angular/core';
 import {DnsCheckService} from '../../services/dns-check.service';
-import {ActivatedRoute} from '@angular/router';
 import {AlertService} from '../../services/alert.service';
 
 @Component({
-  selector: 'app-domain',
-  templateUrl: './domain.component.html',
-  styleUrls: ['./domain.component.css']
+  selector: 'app-form-container',
+  templateUrl: './form-container.component.html',
+  styleUrls: ['./form-container.component.css']
 })
-export class DomainComponent {
+export class FormContainerComponent {
   private intervalTime = 5 * 1000;
   public is_advanced_options_enabled = false;
   public domain_check_progression = 0;
   public showResult = false;
   public showProgressBar = false;
-  public preDelegated;
+  public preDelegated = false;
   public parentData: object;
   public resultID = '';
+  public lang = 'en';
 
-  constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService, route: ActivatedRoute) {
-    this.preDelegated = route.snapshot.data[0]['preDelegated'];
-    this.is_advanced_options_enabled = this.preDelegated;
-  }
+  constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService) {}
 
   public fetchFromParent(domain) {
     this.dnsCheckService.fetchFromParent(domain).then(result => {
@@ -30,7 +28,7 @@ export class DomainComponent {
     }, error => {
       console.log(error);
       this.alertService.error('Error during fetchFromParent');
-  });
+    });
   }
 
   public domainCheck(data: object) {
