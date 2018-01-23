@@ -5,8 +5,8 @@
 
 export const environment = {
   production: false,
-  apiEndpoint: 'https://zonemaster.afnic-labs.fr/api',
+  apiEndpoint: 'http://localhost:50000',
   contactAddress: 'contact@zonemaster.net',
   logoUrl: 'assets/images/zonemaster_logo.svg',
-  clientInfo: {version: '2.0.0-alpha', id: 'Zonemaster GUI Angular'}
+  clientInfo: {version: '2.0.0-beta-0', id: 'Zonemaster GUI Angular'}
 };

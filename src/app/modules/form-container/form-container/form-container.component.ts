@@ -1,7 +1,6 @@
-///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
 import {Component} from '@angular/core';
-import {DnsCheckService} from '@app/core/services/dns-check.service';
-import {AlertService} from '@app/core/services/alert.service';
+import {DnsCheckService} from '@modules/core/services/dns-check.service';
+import {AlertService} from '@modules/core/services/alert.service';
 
 @Component({
   selector: 'app-form-container',

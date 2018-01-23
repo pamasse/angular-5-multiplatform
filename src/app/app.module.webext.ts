@@ -1,21 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component.webext';
-import { SharedModule } from './modules/shared/shared.module';
 
-import { AppService } from './services/app.service';
-import {DnsCheckService} from './services/dns-check.service';
-import {AlertService} from './services/alert.service';
-
-import { FormContainerComponent } from './components/form-container/form-container.component';
-
+import { AppService } from '@modules/core/services/app.service';
+import { DnsCheckService } from '@modules/core/services/dns-check.service';
+import { AlertService } from '@modules/core/services/alert.service';
+import { CoreModule } from '@modules/core';
+import { SharedModule } from '@modules/shared';
+import { FormContainerModule } from '@modules/form-container';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -23,21 +21,17 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 const appRoutes: Routes = [
-
-  { path: '**', component: FormContainerComponent }
+  { path: '**', redirectTo: 'formContainer' },
 ];
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    FormContainerComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     NgbModule.forRoot(),
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -45,11 +39,10 @@ const appRoutes: Routes = [
         deps: [HttpClient]
       }
     }),
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    ),
-    SharedModule
+    RouterModule.forRoot(appRoutes),
+    CoreModule,
+    SharedModule,
+    FormContainerModule
   ],
   providers: [
     AppService,
