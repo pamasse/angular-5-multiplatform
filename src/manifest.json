@@ -13,10 +13,10 @@
   },
 
   "browser_action": {
-    "default_title": "Pinboard Pin",
+    "default_title": "Zonemaster",
     "default_icon": {
-      "32": "/img/pinboard_idle_32.png",
-      "64": "/img/pinboard_idle_64.png"
+      "32": "/img/Zonemaster_idle_32.png",
+      "64": "/img/Zonemaster_idle_64.png"
     },
     "default_popup": "/index.html"
   },
@@ -28,16 +28,6 @@
   "options_ui": {
     "page": "/index.html?page=options"
   },
-
-  "commands": {},
-
-  "content_security_policy": "",
-
-  "content_scripts": [],
-
-  "page_action": {},
-
-  "permissions": ["webNavigation"],
-
-  "web_accessible_resources": []
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; connect-src 'self' 'unsafe-inline' http://localhost:3000",
+  "permissions": ["webNavigation"]
 }

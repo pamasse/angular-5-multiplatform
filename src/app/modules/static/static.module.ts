@@ -19,6 +19,7 @@ import {StaticRoutingModule} from './static-routing.module';
 
     MarkdownModule
   ],
-  declarations: [FaqComponent, PageNotFoundComponent]
+  declarations: [FaqComponent, PageNotFoundComponent],
+  exports: [FaqComponent, PageNotFoundComponent]
 })
 export class StaticModule { }

@@ -14,6 +14,7 @@ import { AlertService } from '@modules/core/services/alert.service';
 import { CoreModule } from '@modules/core';
 import { SharedModule } from '@modules/shared';
 import { FormContainerModule } from '@modules/form-container';
+import {RouterGuard} from '@modules/form-container/router.guard';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -21,9 +22,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 const appRoutes: Routes = [
-  { path: '**', redirectTo: 'formContainer' },
+  { path: '**', redirectTo: 'formContainer' , canActivate: [RouterGuard] },
 ];
-
 
 @NgModule({
   declarations: [
