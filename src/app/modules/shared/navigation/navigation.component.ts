@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {AppService} from '@app/core/services/app.service';
+import {AppService} from '@modules/core/services/app.service';
 
 @Component({
   selector: 'app-navigation',

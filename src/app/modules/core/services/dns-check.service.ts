@@ -12,7 +12,7 @@ export class DnsCheckService {
     this.backendUrl = AppService.apiEndpoint();
     this.clientInfo = AppService.getClientInfo();
 
-    if (this.backendUrl) {
+    if (!this.backendUrl) {
       console.error('Please set the api endpoint');
     }
   }

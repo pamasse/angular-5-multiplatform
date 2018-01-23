@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 
 @Injectable()
 export class AppService {
 
-  constructor() { }
+  constructor() {}
 
   public static apiEndpoint(): string {
     return environment.apiEndpoint;
