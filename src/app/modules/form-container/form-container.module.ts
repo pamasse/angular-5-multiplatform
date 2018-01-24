@@ -11,6 +11,9 @@ import {FormContainerComponent} from './form-container/form-container.component'
     /* Routing */
     FormContainerRoutingModule
   ],
-  declarations: [FormContainerComponent]
+  declarations: [FormContainerComponent],
+  exports: [
+    FormContainerComponent
+  ]
 })
 export class FormContainerModule { }

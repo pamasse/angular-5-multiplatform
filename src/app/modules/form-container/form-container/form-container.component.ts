@@ -51,7 +51,10 @@ export class FormContainerComponent {
                   this.alertService.success(`Domain ${data['domain']} checked with success`);
                   self.resultID = domainCheckId;
                   self.is_advanced_options_enabled = false;
-                  self.showResult = true;
+                  /* Web Extension API in order to create a new tab */
+                  browser.tabs.create({
+                    url: `https://zonemaster.afnic-labs.fr/result/${domainCheckId}`
+                  });
                   self.showProgressBar = false;
                   self.domain_check_progression = 0;
                 }

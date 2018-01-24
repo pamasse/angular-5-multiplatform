@@ -36,6 +36,11 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 
+#### WEB EXT
+Run `web-ext run --source-dir ./dist-webextension` and `ng build --app 2  --sourcemap=false --outt-hashing=none` to test the webextension
+
+
+
 ### Documentation
 
 Basically, the GUI has two major parts. One part is the Perl modules that hold

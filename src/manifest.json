@@ -1,43 +1,16 @@
 {
-  "manifest_version": 2,
-  "name": "Zonemaster WebExt",
-  "version": "0.1",
-  "description": "Zonemaster web-extension",
-  "icons": {},
-
-  "applications": {
-    "gecko": {
-      "id": "addon@example.com",
-      "strict_min_version": "42.0"
+  "short_name": "Zonemaster",
+  "name": "Zonemaster GUI",
+  "start_url": "/",
+  "theme_color": "#f48c5b",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/favicon/android-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  },
-
-  "browser_action": {
-    "default_title": "Pinboard Pin",
-    "default_icon": {
-      "32": "/img/pinboard_idle_32.png",
-      "64": "/img/pinboard_idle_64.png"
-    },
-    "default_popup": "/index.html"
-  },
-
-  "background": {
-    "page": "/index.html?page=background"
-  },
-
-  "options_ui": {
-    "page": "/index.html?page=options"
-  },
-
-  "commands": {},
-
-  "content_security_policy": "",
-
-  "content_scripts": [],
-
-  "page_action": {},
-
-  "permissions": ["webNavigation"],
-
-  "web_accessible_resources": []
+  ]
 }

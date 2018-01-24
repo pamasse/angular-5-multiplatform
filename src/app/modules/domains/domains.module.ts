@@ -20,6 +20,11 @@ import { HistoryComponent } from './history/history.component';
     ResultComponent,
     DomainComponent,
     HistoryComponent,
+  ],
+  exports: [
+    ResultComponent,
+    DomainComponent,
+    HistoryComponent,
   ]
 })
 export class DomainsModule { }
