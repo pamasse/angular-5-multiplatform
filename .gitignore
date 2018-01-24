@@ -2,7 +2,8 @@
 
 # compiled output
 /dist
-/dist-electron
+/dist-*
+/web-ext-artifacts
 /release-builds
 /tmp
 /out-tsc
@@ -43,3 +44,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
