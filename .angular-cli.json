@@ -9,8 +9,10 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        ".htaccess"
+        ".htaccess",
+        "manifest.json"
       ],
+      "serviceWorker": true,
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -35,8 +37,10 @@
       "outDir": "dist-electron",
       "assets": [
         "assets",
-        "electron"
+        "electron",
+        "manifest.json"
       ],
+      "serviceWorker": true,
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -61,8 +65,7 @@
       "root": "src",
       "outDir": "dist-webextension",
       "assets": [
-        "assets",
-        "manifest.json"
+        "assets"
       ],
       "index": "index.html",
       "main": "main.webext.ts",

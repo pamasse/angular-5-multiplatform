@@ -13,6 +13,9 @@ import { DomainsModule } from '@modules/domains';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {HttpClient} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import { ServiceWorkerModule } from '@angular/service-worker';
+
+import { environment } from '@env/environment';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,6 +44,7 @@ const appRoutes: Routes = [
         deps: [HttpClient]
       }
     }),
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     RouterModule.forRoot(appRoutes),
     CoreModule,
     SharedModule,
