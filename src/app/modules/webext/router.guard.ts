@@ -11,9 +11,14 @@ export class RouterGuard implements CanActivate {
               state: RouterStateSnapshot): Observable<boolean>|boolean {
 
     const page = route.queryParams['page'];
+
+    if (!page) {
+      return true;
+    }
+
     console.log('RouterGuard : ' + page);
-    // this.router.navigate(['/' + page]);
-    return true;
+    this.router.navigate(['/' + page]);
+    return false;
   }
 
 }

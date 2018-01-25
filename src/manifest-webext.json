@@ -25,9 +25,6 @@
     "page": "/index.html?page=background"
   },
 
-  "options_ui": {
-    "page": "/index.html?page=options"
-  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; connect-src 'self' 'unsafe-inline' http://localhost:3000",
   "permissions": ["webNavigation"]
 }

@@ -17,29 +17,14 @@
     "e2e": "ng e2e",
     "ngsw-config": "node_modules/.bin/ngsw-config dist src/ngsw-config.json",
     "serve:web:prod": "npm run build:web && node dev-server.js",
-    "build:web": "ng build --prod --aot --app 0 && npm run ngsw-config && cross-os cp-ngsw && node compress.js",
-    "build:webextension": "rimraf ./dist-webextension && ng build --app 2 --aot --prod --sourcemap=false --output-hashing=none && cross-os mv-manifest-webext && web-ext build --source-dir=dist-webextension --artifacts-dir=.",
+    "serve:webextension": "npm run build:webextension && web-ext run --source-dir=dist-webextension",
+    "build:web": "ng build --prod --aot --app 0 && npm run ngsw-config && cpy node_modules/@angular/service-worker/ngsw-worker.js dist/ && node compress.js",
+    "build:webextension": "rimraf ./dist-webextension && ng build --app 2 --aot --prod --sourcemap=false --output-hashing=none && cpy src/manifest-webext.json dist-webextension/ --rename=manifest.json",
+    "package:webextension": "npm run build:webextension && web-ext build --source-dir=dist-webextension --artifacts-dir=.",
     "build:wordpress:plugin": "",
-    "build-electron": "rimraf ./dist-electron && ng build --prod --aot --app 1 -e electron --base-href ./ && npm run electron-ntsc && cross-os cp-package",
+    "build:desktop": "rimraf ./dist-electron && ng build --prod --aot --app 1 -e electron --base-href ./ && npm run electron-ntsc && cpy package.json dist-electron",
     "electron-ntsc": "ntsc src/environments/environment.electron.ts --outDir dist-electron/environments",
-    "build:desktop": "npm run build-electron && build --projectDir=dist-electron"
-  },
-  "cross-os": {
-    "cp-package": {
-      "darwin": "cp package.json dist-electron",
-      "win32": "copy package.json dist-electron",
-      "linux": "cp package.json dist-electron"
-    },
-    "mv-manifest-webext": {
-      "darwin": "cp src/manifest-webext.json dist-webextension/manifest.json",
-      "win32": "copy src/manifest-webext.json dist-webextension/manifest.json",
-      "linux": "cp src/manifest-webext.json dist-webextension/manifest.json"
-    },
-    "cp-ngsw": {
-      "darwin": "cp node_modules/@angular/service-worker/ngsw-worker.js dist/",
-      "win32": "copy node_modules/@angular/service-worker/ngsw-worker.js dist/",
-      "linux": "cp node_modules/@angular/service-worker/ngsw-worker.js dist/"
-    }
+    "package:desktop": "npm run build:desktop && build --projectDir=dist-electron"
   },
   "private": false,
   "dependencies": {
@@ -80,7 +65,7 @@
     "codelyzer": "^4.1.0",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
-    "cross-os": "^1.2.2",
+    "cpy-cli": "^1.0.1",
     "david": "^11.0.0",
     "electron": "^1.7.9",
     "electron-connect": "^0.6.2",
