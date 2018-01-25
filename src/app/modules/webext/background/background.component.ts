@@ -13,20 +13,29 @@ export class BackgroundComponent implements OnInit {
 
   constructor(private dnsCheckService: DnsCheckService) {
     console.log('background.js');
-    /*browser.tabs.onRemoved.addListener(tabId => {
-      this.tabCache[tabId] = null;
-    });
-    */
+
   }
 
-  ngOnInit() {/*
-    browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-      if (tab.url) {
-        console.log(tab.url);
-      }
+  ngOnInit() {
+    console.log('in onInit');
+
+    (chrome || browser).tabs.onRemoved.addListener(tabId => {
+      this.tabCache[tabId] = null;
     });
 
-    ( chrome || browser ).runtime.onMessage.addListener((message, sender, sendResponse) => {
+    (chrome || browser).tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+      if (changeInfo.status === 'complete') {
+        if (changeInfo.url) {
+          const url = changeInfo.url.split('')[2];
+          if (url in this.urlCache) {
+
+          }
+        }
+      }
+
+    });
+
+    (chrome || browser).runtime.onMessage.addListener((message, sender, sendResponse) => {
       if ( typeof message.id !== 'undefined' ) {
         if ( message.id !== 'log' ) {
           // Log
@@ -51,8 +60,10 @@ export class BackgroundComponent implements OnInit {
               tab: sender.tab
             });
             */
-         /*   break;
+            break;
           case 'get_info':
+            console.log('get_info');
+            console.log(message.tab.id);
             response = {
               tabCache:   this.tabCache[message.tab.id],
               // apps:       wappalyzer.apps,
@@ -67,6 +78,6 @@ export class BackgroundComponent implements OnInit {
 
         sendResponse(response);
       }
-    });*/
+    });
   }
 }

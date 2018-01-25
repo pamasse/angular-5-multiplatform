@@ -20,11 +20,23 @@
     },
     "default_popup": "/index.html"
   },
+  "page_action": {
+    "default_icon": {
+      "16": "/assets/favicon/favicon-16x16.png",
+      "32": "/assets/favicon/favicon-32x32.png"
+    },
+    "default_title": "Zonemaster",
+    "default_popup": "/index.html?page=pageAction"
+  },
 
   "background": {
     "page": "/index.html?page=background"
   },
 
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; connect-src 'self' 'unsafe-inline' http://localhost:3000",
-  "permissions": ["webNavigation"]
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'; connect-src 'self' 'unsafe-inline' http://localhost:4201",
+  "permissions": [
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ]
 }

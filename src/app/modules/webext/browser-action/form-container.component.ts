@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DnsCheckService} from '@modules/core/services/dns-check.service';
 import {AlertService} from '@modules/core/services/alert.service';
 
@@ -7,7 +7,7 @@ import {AlertService} from '@modules/core/services/alert.service';
   templateUrl: './form-container.component.html',
   styleUrls: ['./form-container.component.css']
 })
-export class FormContainerComponent {
+export class FormContainerComponent implements OnInit {
   private intervalTime = 5 * 1000;
   public is_advanced_options_enabled = false;
   public domain_check_progression = 0;
@@ -19,6 +19,22 @@ export class FormContainerComponent {
   public lang = 'en';
 
   constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService) {}
+
+  ngOnInit() {
+    const func = tabs => { ( chrome || browser ).runtime.sendMessage({
+      id: 'get_info',
+      tab: tabs[0],
+      source: 'browser-action'
+    }, response => {
+      console.log('popup');
+      console.log(response);
+    });
+    };
+
+    browser.tabs.query({ active: true, currentWindow: true })
+      .then(func)
+      .catch(console.error);
+  }
 
   public fetchFromParent(domain) {
     this.dnsCheckService.fetchFromParent(domain).then(result => {
