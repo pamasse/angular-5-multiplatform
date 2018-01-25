@@ -20,67 +20,66 @@ export class FormContainerComponent implements OnInit {
 
   constructor(private alertService: AlertService, private dnsCheckService: DnsCheckService) {}
 
-  ngOnInit() {
-    const func = tabs => { ( chrome || browser ).runtime.sendMessage({
-      id: 'get_info',
+  private backendEmit(action, tabs) {
+    ( chrome || browser ).runtime.sendMessage({
+      action,
       tab: tabs[0],
-      source: 'browser-action'
+      source: 'browser-action',
+      destination: 'background'
     }, response => {
-      console.log('popup');
-      console.log(response);
+      this.showProgressBar = true;
+      if (response.status) {
+        this.showProgressBar = false;
+        this.onComplete(response.result);
+      }
     });
-    };
-
-    browser.tabs.query({ active: true, currentWindow: true })
-      .then(func)
-      .catch(console.error);
   }
 
-  public fetchFromParent(domain) {
-    this.dnsCheckService.fetchFromParent(domain).then(result => {
-      this.parentData = result;
-      this.alertService.success('Parent data fetched with success');
-    }, error => {
-      console.log(error);
-      this.alertService.error('Error during fetchFromParent');
+  ngOnInit() {
+    browser.tabs.query({ active: true, currentWindow: true })
+      .then(tabs => {
+        this.backendEmit('get_info', tabs);
+      })
+      .catch(console.error);
+
+    (chrome || browser).runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.destination === 'browser-action') {
+        switch (message.action) {
+          case 'progress':
+            this.onProgress(message.progression);
+            break;
+          case 'complete':
+            this.onComplete(message.result);
+            break;
+          case 'error':
+            this.onError(message.error);
+            break;
+          default:
+            console.log('BrowserAction  Default ');
+        }
+      }
     });
   }
 
   public domainCheck(data: object) {
-    let domainCheckId: string;
+    browser.tabs.query({ active: true, currentWindow: true })
+      .then(tabs => {
+        tabs.analyzeData = data;
+        this.backendEmit('analyze', tabs);
+      })
+      .catch(console.error);
+  }
 
-    const self = this;
+  private onComplete(res) {
+    console.log('on complete');
+  }
 
-    this.dnsCheckService.validateSyntax(data).then(
-      result => {
-        if (result['status'] === 'ok') {
-          this.dnsCheckService.startDomainTest(data).then(id => {
-            domainCheckId = id as string;
-            this.showProgressBar = true;
-            const handle = setInterval(() => {
-              self.dnsCheckService.testProgress(domainCheckId).then(res => {
+  private onError(err) {
+    console.log(err);
+  }
 
-                self.domain_check_progression = res as number;
-
-                if (res === 100) {
-                  clearInterval(handle);
-                  this.alertService.success(`Domain ${data['domain']} checked with success`);
-                  self.resultID = domainCheckId;
-                  self.is_advanced_options_enabled = false;
-                  /* Web Extension API in order to create a new tab */
-                  browser.tabs.create({
-                    url: `https://zonemaster.afnic-labs.fr/result/${domainCheckId}`
-                  });
-                  self.showProgressBar = false;
-                  self.domain_check_progression = 0;
-                }
-              });
-            }, this.intervalTime);
-          });
-        }
-      }, error => {
-        this.alertService.error(`Server error`);
-      }
-    );
+  private onProgress(progression) {
+    console.log(progression);
+    this.domain_check_progression = progression;
   }
 }
