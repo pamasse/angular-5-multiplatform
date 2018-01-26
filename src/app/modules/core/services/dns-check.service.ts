@@ -11,7 +11,7 @@ export class DnsCheckService {
   constructor(private alertService: AlertService, private http: HttpClient) {
     this.backendUrl = AppService.apiEndpoint();
     this.clientInfo = AppService.getClientInfo();
-
+    console.log(this.backendUrl);
     if (!this.backendUrl) {
       console.error('Please set the api endpoint');
     }

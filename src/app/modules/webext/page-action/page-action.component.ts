@@ -15,7 +15,8 @@ export class PageActionComponent implements OnInit {
     const func = tabs => { ( chrome || browser ).runtime.sendMessage({
         id: 'get_info',
         tab: tabs[0],
-        source: 'popup.js'
+        source: 'page-action',
+        destination: 'background'
       }, response => {
         console.log('RESPONSE');
         console.log(response);

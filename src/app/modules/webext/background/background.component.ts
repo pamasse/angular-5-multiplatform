@@ -20,7 +20,7 @@ export class BackgroundComponent implements OnInit {
     let domainCheckId: string;
 
     const self = this;
-
+    console.log(data);
     if (!data.domain) {
       console.log('Please fil a domaine');
       return;
@@ -34,37 +34,49 @@ export class BackgroundComponent implements OnInit {
     data.profile = 'default_profile';
 
     this.dnsCheckService.validateSyntax(data).then(result => {
+        console.log('ValidateSyntaxe: ' + result['status']);
         if (result['status'] === 'ok') {
           this.dnsCheckService.startDomainTest(data).then(id => {
             domainCheckId = id as string;
+            self.tabCache[tabId] = {
+              url: data.domaine,
+              state: 'progress',
+              domainCheckId
+            };
 
             const handle = setInterval(() => {
-              self.dnsCheckService.testProgress(domainCheckId).then(res => {
+              self.dnsCheckService.testProgress(domainCheckId).then(progression => {
                 ( chrome || browser ).runtime.sendMessage({
                   action: 'progress',
-                  progression: res,
+                  progression: progression,
                   source: 'background',
                   destination: ( tabId ? 'page-action' : 'browser-action'),
                   tabId: tabId
                 });
-
-                if (res === 100) {
+                console.log('Check progress :' + progression);
+                if (progression === 100) {
                   clearInterval(handle);
                   if (openTab) {
                     browser.tabs.create({
-                      url: `https://zonemaster.afnic-labs.fr/result/${res.domainCheckId}`
+                      url: `https://zonemaster.afnic-labs.fr/result/${domainCheckId}`
                     });
                   } else {
                     self.dnsCheckService.getTestResults({id: domainCheckId, language: 'en'}).then(domainCheckResult => {
-                      const level = {};
-                      for (const item of domainCheckResult) {
-                        level[item.level]++;
+                      console.log('Check result: ' + domainCheckId);
+                      const levels = {};
+                      for (const item of domainCheckResult['results']) {
+                        levels[item.level]++;
                       }
-                      self.urlCache[data.domain] = level;
-                      self.tabCache[tabId] = {url: data.domaine, result: level};
+                      self.urlCache[data.domain] =  {levels, domainCheckId};
+                      self.tabCache[tabId] = {
+                        url: data.domaine,
+                        result: levels,
+                        state: 'complete',
+                        domainCheckId
+                      };
                       ( chrome || browser ).runtime.sendMessage({
                         action: 'complete',
-                        result: {domainCheckId: res.domainCheckId, result: level},
+                        result: self.tabCache[tabId],
                         source: 'background',
                         destination: 'browser-action'
                       });
@@ -85,19 +97,24 @@ export class BackgroundComponent implements OnInit {
     console.log('in onInit');
 
     (chrome || browser).tabs.onRemoved.addListener(tabId => {
+      console.log('onRemoved :' + tabId);
       delete this.urlCache[this.tabCache[tabId].url];
-      this.tabCache[tabId] = null;
+      delete this.tabCache[tabId];
     });
 
     (chrome || browser).tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       if (changeInfo.status === 'complete') {
-        if (changeInfo.url) {
-          const url = changeInfo.url.split('/')[2];
-          if (this.urlCache[url] === undefined) {
-            this.tabCache[changeInfo.tabId].result = this.urlCache[url];
-            this.tabCache[changeInfo.tabId].url = url;
+        if (tab.url) {
+          const url = tab.url.split('/')[2];
+          if (this.urlCache[url] !== undefined) {
+            console.log('connu');
+            this.tabCache[tab.id].result = this.urlCache[url].levels;
+            this.tabCache[tab.id].url = url;
+            this.tabCache[tab.id].state = 'complete';
+            this.tabCache[tab.id].domainCheckId = this.urlCache[url].domainCheckId;
           } else {
-            this.analyze({}, false, tabId);
+            console.log('inconnu');
+            this.analyze({domain: url}, false, tabId);
           }
         }
       }
@@ -105,17 +122,25 @@ export class BackgroundComponent implements OnInit {
 
 
     (chrome || browser).tabs.onActivated.addListener(activeInfo => {
+      console.log('New tab activated : ');
+      console.log(activeInfo);
+      let icon = 'favicon-16x16.png';
       if (this.tabCache[activeInfo.tabId] !== undefined) {
-        let level = 'NOTICE';
-        const result = this.tabCache[activeInfo.tabId].result;
-        Object.keys(result).forEach(function (key) {
-          if (result[level] > result[key]) {
-            level = key;
-          }
-        });
+        if (this.tabCache[activeInfo.tabId].state === 'complete') {
+          let level = 'NOTICE';
+          const result = this.tabCache[activeInfo.tabId].result;
+          Object.keys(result).forEach(function (key) {
+            if (result[level] > result[key]) {
+              level = key;
+            }
+          });
+          icon = `favicon-${level}-16x16.png`;
+        } else if (this.tabCache[activeInfo.tabId].state === 'progress') {
+          icon = `favicon-spinner-16x16.png`;
+        }
         (chrome || browser).pageAction.setIcon({
-            path: `/assets/favicon/favicon-${level}-16x16.png`,
-            tabId: activeInfo.tabId
+          path: `/assets/favicon/${icon}`,
+          tabId: activeInfo.tabId
         });
       }
     });
@@ -132,6 +157,7 @@ export class BackgroundComponent implements OnInit {
             console.log('Analyze');
             const url = sender.tab.url.url.split('/')[2];
             response.tabId = message.tab.id;
+            console.log(url);
             if ( this.urlCache[url] !== undefined ) {
               response.status = true;
               response.result = this.urlCache[url.canonical];
